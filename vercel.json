@@ -1,7 +1,7 @@
 {
-  "buildCommand": "npm install",
+  "buildCommand": "echo 'Static site: no build step'",
   "outputDirectory": ".",
   "env": {
-    "FIREBASE_API_KEY": "@firebase_api_key"
+    "FIREBASE_API_KEY": "AIzaSyDVLLTC-kqLBJ0Me06rqsu5BRneQiFkoE4"
   }
 }
