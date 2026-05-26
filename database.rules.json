@@ -1,0 +1,45 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "equipos": {
+      ".read": true,
+      ".write": "auth != null && root.child('usuarios').child(auth.uid).child('rol').val() === 'profesor'"
+    },
+    "usuarios": {
+      ".read": true,
+      "$usuarioId": {
+        ".write": "auth != null && (auth.uid === $usuarioId || root.child('usuarios').child(auth.uid).child('rol').val() === 'profesor')"
+      }
+    },
+    "predicciones": {
+      ".read": true,
+      "$usuarioId": {
+        ".indexOn": ["timestamp"],
+        ".write": "auth != null && (auth.uid === $usuarioId || root.child('usuarios').child(auth.uid).child('rol').val() === 'profesor')"
+      }
+    },
+    "chat_general": {
+      ".read": true,
+      ".write": "auth != null",
+      ".indexOn": ["timestamp"]
+    },
+    "rankings": {
+      ".read": true,
+      ".write": "auth != null && root.child('usuarios').child(auth.uid).child('rol').val() === 'profesor'"
+    },
+    "partidos": {
+      ".read": true,
+      ".write": "auth != null && root.child('usuarios').child(auth.uid).child('rol').val() === 'profesor'",
+      ".indexOn": ["jornada", "estado", "fecha"]
+    },
+    "codigos_invitacion": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('usuarios').child(auth.uid).child('rol').val() === 'profesor'"
+    },
+    "$other": {
+      ".read": "auth != null",
+      ".write": false
+    }
+  }
+}

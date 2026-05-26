@@ -1,0 +1,2257 @@
+{
+  "equipos": {
+    "MEX": {
+      "nombre": "Mexico",
+      "codigo": "MEX",
+      "posicion_fifa": 1,
+      "goles_promedio": 1.25,
+      "goles_concedidos": 1,
+      "racha_actual": "E-P-G",
+      "grupo": "A"
+    },
+    "USA": {
+      "nombre": "United States",
+      "codigo": "USA",
+      "posicion_fifa": 2,
+      "goles_promedio": 1.5,
+      "goles_concedidos": 1.2,
+      "racha_actual": "G-E-G",
+      "grupo": "A"
+    },
+    "CAN": {
+      "nombre": "Canada",
+      "codigo": "CAN",
+      "posicion_fifa": 3,
+      "goles_promedio": 1.75,
+      "goles_concedidos": 1.4,
+      "racha_actual": "E-P-G",
+      "grupo": "A"
+    },
+    "CRC": {
+      "nombre": "Costa Rica",
+      "codigo": "CRC",
+      "posicion_fifa": 4,
+      "goles_promedio": 2,
+      "goles_concedidos": 1.6,
+      "racha_actual": "G-E-G",
+      "grupo": "A"
+    },
+    "ARG": {
+      "nombre": "Argentina",
+      "codigo": "ARG",
+      "posicion_fifa": 5,
+      "goles_promedio": 2.25,
+      "goles_concedidos": 1.8,
+      "racha_actual": "E-P-G",
+      "grupo": "B"
+    },
+    "URU": {
+      "nombre": "Uruguay",
+      "codigo": "URU",
+      "posicion_fifa": 6,
+      "goles_promedio": 2.5,
+      "goles_concedidos": 0.8,
+      "racha_actual": "G-E-G",
+      "grupo": "B"
+    },
+    "CHI": {
+      "nombre": "Chile",
+      "codigo": "CHI",
+      "posicion_fifa": 7,
+      "goles_promedio": 1,
+      "goles_concedidos": 1,
+      "racha_actual": "E-P-G",
+      "grupo": "B"
+    },
+    "PAR": {
+      "nombre": "Paraguay",
+      "codigo": "PAR",
+      "posicion_fifa": 8,
+      "goles_promedio": 1.25,
+      "goles_concedidos": 1.2,
+      "racha_actual": "G-E-G",
+      "grupo": "B"
+    },
+    "BRA": {
+      "nombre": "Brazil",
+      "codigo": "BRA",
+      "posicion_fifa": 9,
+      "goles_promedio": 1.5,
+      "goles_concedidos": 1.4,
+      "racha_actual": "E-P-G",
+      "grupo": "C"
+    },
+    "COL": {
+      "nombre": "Colombia",
+      "codigo": "COL",
+      "posicion_fifa": 10,
+      "goles_promedio": 1.75,
+      "goles_concedidos": 1.6,
+      "racha_actual": "G-E-G",
+      "grupo": "C"
+    },
+    "PER": {
+      "nombre": "Peru",
+      "codigo": "PER",
+      "posicion_fifa": 11,
+      "goles_promedio": 2,
+      "goles_concedidos": 1.8,
+      "racha_actual": "E-P-G",
+      "grupo": "C"
+    },
+    "VEN": {
+      "nombre": "Venezuela",
+      "codigo": "VEN",
+      "posicion_fifa": 12,
+      "goles_promedio": 2.25,
+      "goles_concedidos": 0.8,
+      "racha_actual": "G-E-G",
+      "grupo": "C"
+    },
+    "ESP": {
+      "nombre": "Spain",
+      "codigo": "ESP",
+      "posicion_fifa": 13,
+      "goles_promedio": 2.5,
+      "goles_concedidos": 1,
+      "racha_actual": "E-P-G",
+      "grupo": "D"
+    },
+    "POR": {
+      "nombre": "Portugal",
+      "codigo": "POR",
+      "posicion_fifa": 14,
+      "goles_promedio": 1,
+      "goles_concedidos": 1.2,
+      "racha_actual": "G-E-G",
+      "grupo": "D"
+    },
+    "ITA": {
+      "nombre": "Italy",
+      "codigo": "ITA",
+      "posicion_fifa": 15,
+      "goles_promedio": 1.25,
+      "goles_concedidos": 1.4,
+      "racha_actual": "E-P-G",
+      "grupo": "D"
+    },
+    "SUI": {
+      "nombre": "Switzerland",
+      "codigo": "SUI",
+      "posicion_fifa": 16,
+      "goles_promedio": 1.5,
+      "goles_concedidos": 1.6,
+      "racha_actual": "G-E-G",
+      "grupo": "D"
+    },
+    "ENG": {
+      "nombre": "England",
+      "codigo": "ENG",
+      "posicion_fifa": 17,
+      "goles_promedio": 1.75,
+      "goles_concedidos": 1.8,
+      "racha_actual": "E-P-G",
+      "grupo": "E"
+    },
+    "FRA": {
+      "nombre": "France",
+      "codigo": "FRA",
+      "posicion_fifa": 18,
+      "goles_promedio": 2,
+      "goles_concedidos": 0.8,
+      "racha_actual": "G-E-G",
+      "grupo": "E"
+    },
+    "BEL": {
+      "nombre": "Belgium",
+      "codigo": "BEL",
+      "posicion_fifa": 19,
+      "goles_promedio": 2.25,
+      "goles_concedidos": 1,
+      "racha_actual": "E-P-G",
+      "grupo": "E"
+    },
+    "NED": {
+      "nombre": "Netherlands",
+      "codigo": "NED",
+      "posicion_fifa": 20,
+      "goles_promedio": 2.5,
+      "goles_concedidos": 1.2,
+      "racha_actual": "G-E-G",
+      "grupo": "E"
+    },
+    "GER": {
+      "nombre": "Germany",
+      "codigo": "GER",
+      "posicion_fifa": 21,
+      "goles_promedio": 1,
+      "goles_concedidos": 1.4,
+      "racha_actual": "E-P-G",
+      "grupo": "F"
+    },
+    "CRO": {
+      "nombre": "Croatia",
+      "codigo": "CRO",
+      "posicion_fifa": 22,
+      "goles_promedio": 1.25,
+      "goles_concedidos": 1.6,
+      "racha_actual": "G-E-G",
+      "grupo": "F"
+    },
+    "DEN": {
+      "nombre": "Denmark",
+      "codigo": "DEN",
+      "posicion_fifa": 23,
+      "goles_promedio": 1.5,
+      "goles_concedidos": 1.8,
+      "racha_actual": "E-P-G",
+      "grupo": "F"
+    },
+    "SWE": {
+      "nombre": "Sweden",
+      "codigo": "SWE",
+      "posicion_fifa": 24,
+      "goles_promedio": 1.75,
+      "goles_concedidos": 0.8,
+      "racha_actual": "G-E-G",
+      "grupo": "F"
+    },
+    "JPN": {
+      "nombre": "Japan",
+      "codigo": "JPN",
+      "posicion_fifa": 25,
+      "goles_promedio": 2,
+      "goles_concedidos": 1,
+      "racha_actual": "E-P-G",
+      "grupo": "G"
+    },
+    "KOR": {
+      "nombre": "South Korea",
+      "codigo": "KOR",
+      "posicion_fifa": 26,
+      "goles_promedio": 2.25,
+      "goles_concedidos": 1.2,
+      "racha_actual": "G-E-G",
+      "grupo": "G"
+    },
+    "AUS": {
+      "nombre": "Australia",
+      "codigo": "AUS",
+      "posicion_fifa": 27,
+      "goles_promedio": 2.5,
+      "goles_concedidos": 1.4,
+      "racha_actual": "E-P-G",
+      "grupo": "G"
+    },
+    "IRN": {
+      "nombre": "Iran",
+      "codigo": "IRN",
+      "posicion_fifa": 28,
+      "goles_promedio": 1,
+      "goles_concedidos": 1.6,
+      "racha_actual": "G-E-G",
+      "grupo": "G"
+    },
+    "MAR": {
+      "nombre": "Morocco",
+      "codigo": "MAR",
+      "posicion_fifa": 29,
+      "goles_promedio": 1.25,
+      "goles_concedidos": 1.8,
+      "racha_actual": "E-P-G",
+      "grupo": "H"
+    },
+    "SEN": {
+      "nombre": "Senegal",
+      "codigo": "SEN",
+      "posicion_fifa": 30,
+      "goles_promedio": 1.5,
+      "goles_concedidos": 0.8,
+      "racha_actual": "G-E-G",
+      "grupo": "H"
+    },
+    "NGA": {
+      "nombre": "Nigeria",
+      "codigo": "NGA",
+      "posicion_fifa": 31,
+      "goles_promedio": 1.75,
+      "goles_concedidos": 1,
+      "racha_actual": "E-P-G",
+      "grupo": "H"
+    },
+    "TUN": {
+      "nombre": "Tunisia",
+      "codigo": "TUN",
+      "posicion_fifa": 32,
+      "goles_promedio": 2,
+      "goles_concedidos": 1.2,
+      "racha_actual": "G-E-G",
+      "grupo": "H"
+    },
+    "POL": {
+      "nombre": "Poland",
+      "codigo": "POL",
+      "posicion_fifa": 33,
+      "goles_promedio": 2.25,
+      "goles_concedidos": 1.4,
+      "racha_actual": "E-P-G",
+      "grupo": "I"
+    },
+    "CZE": {
+      "nombre": "Czech Republic",
+      "codigo": "CZE",
+      "posicion_fifa": 34,
+      "goles_promedio": 2.5,
+      "goles_concedidos": 1.6,
+      "racha_actual": "G-E-G",
+      "grupo": "I"
+    },
+    "AUT": {
+      "nombre": "Austria",
+      "codigo": "AUT",
+      "posicion_fifa": 35,
+      "goles_promedio": 1,
+      "goles_concedidos": 1.8,
+      "racha_actual": "E-P-G",
+      "grupo": "I"
+    },
+    "NOR": {
+      "nombre": "Norway",
+      "codigo": "NOR",
+      "posicion_fifa": 36,
+      "goles_promedio": 1.25,
+      "goles_concedidos": 0.8,
+      "racha_actual": "G-E-G",
+      "grupo": "I"
+    },
+    "SRB": {
+      "nombre": "Serbia",
+      "codigo": "SRB",
+      "posicion_fifa": 37,
+      "goles_promedio": 1.5,
+      "goles_concedidos": 1,
+      "racha_actual": "E-P-G",
+      "grupo": "J"
+    },
+    "UKR": {
+      "nombre": "Ukraine",
+      "codigo": "UKR",
+      "posicion_fifa": 38,
+      "goles_promedio": 1.75,
+      "goles_concedidos": 1.2,
+      "racha_actual": "G-E-G",
+      "grupo": "J"
+    },
+    "TUR": {
+      "nombre": "Turkey",
+      "codigo": "TUR",
+      "posicion_fifa": 39,
+      "goles_promedio": 2,
+      "goles_concedidos": 1.4,
+      "racha_actual": "E-P-G",
+      "grupo": "J"
+    },
+    "GRE": {
+      "nombre": "Greece",
+      "codigo": "GRE",
+      "posicion_fifa": 40,
+      "goles_promedio": 2.25,
+      "goles_concedidos": 1.6,
+      "racha_actual": "G-E-G",
+      "grupo": "J"
+    },
+    "ECU": {
+      "nombre": "Ecuador",
+      "codigo": "ECU",
+      "posicion_fifa": 41,
+      "goles_promedio": 2.5,
+      "goles_concedidos": 1.8,
+      "racha_actual": "E-P-G",
+      "grupo": "K"
+    },
+    "BOL": {
+      "nombre": "Bolivia",
+      "codigo": "BOL",
+      "posicion_fifa": 42,
+      "goles_promedio": 1,
+      "goles_concedidos": 0.8,
+      "racha_actual": "G-E-G",
+      "grupo": "K"
+    },
+    "HON": {
+      "nombre": "Honduras",
+      "codigo": "HON",
+      "posicion_fifa": 43,
+      "goles_promedio": 1.25,
+      "goles_concedidos": 1,
+      "racha_actual": "E-P-G",
+      "grupo": "K"
+    },
+    "GUA": {
+      "nombre": "Guatemala",
+      "codigo": "GUA",
+      "posicion_fifa": 44,
+      "goles_promedio": 1.5,
+      "goles_concedidos": 1.2,
+      "racha_actual": "G-E-G",
+      "grupo": "K"
+    },
+    "EGY": {
+      "nombre": "Egypt",
+      "codigo": "EGY",
+      "posicion_fifa": 45,
+      "goles_promedio": 1.75,
+      "goles_concedidos": 1.4,
+      "racha_actual": "E-P-G",
+      "grupo": "L"
+    },
+    "CMR": {
+      "nombre": "Cameroon",
+      "codigo": "CMR",
+      "posicion_fifa": 46,
+      "goles_promedio": 2,
+      "goles_concedidos": 1.6,
+      "racha_actual": "G-E-G",
+      "grupo": "L"
+    },
+    "GHA": {
+      "nombre": "Ghana",
+      "codigo": "GHA",
+      "posicion_fifa": 47,
+      "goles_promedio": 2.25,
+      "goles_concedidos": 1.8,
+      "racha_actual": "E-P-G",
+      "grupo": "L"
+    },
+    "CIV": {
+      "nombre": "Ivory Coast",
+      "codigo": "CIV",
+      "posicion_fifa": 48,
+      "goles_promedio": 2.5,
+      "goles_concedidos": 0.8,
+      "racha_actual": "G-E-G",
+      "grupo": "L"
+    }
+  },
+  "partidos": {
+    "m001": {
+      "id": "m001",
+      "fase": "grupos",
+      "grupo": "A",
+      "jornada": 1,
+      "fecha": "2026-06-11",
+      "hora": "16:00",
+      "pais1": "MEX",
+      "pais2": "USA",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m002": {
+      "id": "m002",
+      "fase": "grupos",
+      "grupo": "A",
+      "jornada": 1,
+      "fecha": "2026-06-12",
+      "hora": "19:00",
+      "pais1": "CAN",
+      "pais2": "CRC",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m003": {
+      "id": "m003",
+      "fase": "grupos",
+      "grupo": "A",
+      "jornada": 2,
+      "fecha": "2026-06-13",
+      "hora": "16:00",
+      "pais1": "MEX",
+      "pais2": "CAN",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m004": {
+      "id": "m004",
+      "fase": "grupos",
+      "grupo": "A",
+      "jornada": 2,
+      "fecha": "2026-06-14",
+      "hora": "19:00",
+      "pais1": "USA",
+      "pais2": "CRC",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m005": {
+      "id": "m005",
+      "fase": "grupos",
+      "grupo": "A",
+      "jornada": 3,
+      "fecha": "2026-06-15",
+      "hora": "16:00",
+      "pais1": "MEX",
+      "pais2": "CRC",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m006": {
+      "id": "m006",
+      "fase": "grupos",
+      "grupo": "A",
+      "jornada": 3,
+      "fecha": "2026-06-16",
+      "hora": "19:00",
+      "pais1": "USA",
+      "pais2": "CAN",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m007": {
+      "id": "m007",
+      "fase": "grupos",
+      "grupo": "B",
+      "jornada": 1,
+      "fecha": "2026-06-17",
+      "hora": "16:00",
+      "pais1": "ARG",
+      "pais2": "URU",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m008": {
+      "id": "m008",
+      "fase": "grupos",
+      "grupo": "B",
+      "jornada": 1,
+      "fecha": "2026-06-18",
+      "hora": "19:00",
+      "pais1": "CHI",
+      "pais2": "PAR",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m009": {
+      "id": "m009",
+      "fase": "grupos",
+      "grupo": "B",
+      "jornada": 2,
+      "fecha": "2026-06-19",
+      "hora": "16:00",
+      "pais1": "ARG",
+      "pais2": "CHI",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m010": {
+      "id": "m010",
+      "fase": "grupos",
+      "grupo": "B",
+      "jornada": 2,
+      "fecha": "2026-06-20",
+      "hora": "19:00",
+      "pais1": "URU",
+      "pais2": "PAR",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m011": {
+      "id": "m011",
+      "fase": "grupos",
+      "grupo": "B",
+      "jornada": 3,
+      "fecha": "2026-06-21",
+      "hora": "16:00",
+      "pais1": "ARG",
+      "pais2": "PAR",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m012": {
+      "id": "m012",
+      "fase": "grupos",
+      "grupo": "B",
+      "jornada": 3,
+      "fecha": "2026-06-22",
+      "hora": "19:00",
+      "pais1": "URU",
+      "pais2": "CHI",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m013": {
+      "id": "m013",
+      "fase": "grupos",
+      "grupo": "C",
+      "jornada": 1,
+      "fecha": "2026-06-23",
+      "hora": "16:00",
+      "pais1": "BRA",
+      "pais2": "COL",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m014": {
+      "id": "m014",
+      "fase": "grupos",
+      "grupo": "C",
+      "jornada": 1,
+      "fecha": "2026-06-24",
+      "hora": "19:00",
+      "pais1": "PER",
+      "pais2": "VEN",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m015": {
+      "id": "m015",
+      "fase": "grupos",
+      "grupo": "C",
+      "jornada": 2,
+      "fecha": "2026-06-25",
+      "hora": "16:00",
+      "pais1": "BRA",
+      "pais2": "PER",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m016": {
+      "id": "m016",
+      "fase": "grupos",
+      "grupo": "C",
+      "jornada": 2,
+      "fecha": "2026-06-26",
+      "hora": "19:00",
+      "pais1": "COL",
+      "pais2": "VEN",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m017": {
+      "id": "m017",
+      "fase": "grupos",
+      "grupo": "C",
+      "jornada": 3,
+      "fecha": "2026-06-27",
+      "hora": "16:00",
+      "pais1": "BRA",
+      "pais2": "VEN",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m018": {
+      "id": "m018",
+      "fase": "grupos",
+      "grupo": "C",
+      "jornada": 3,
+      "fecha": "2026-06-28",
+      "hora": "19:00",
+      "pais1": "COL",
+      "pais2": "PER",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m019": {
+      "id": "m019",
+      "fase": "grupos",
+      "grupo": "D",
+      "jornada": 1,
+      "fecha": "2026-06-29",
+      "hora": "16:00",
+      "pais1": "ESP",
+      "pais2": "POR",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m020": {
+      "id": "m020",
+      "fase": "grupos",
+      "grupo": "D",
+      "jornada": 1,
+      "fecha": "2026-06-30",
+      "hora": "19:00",
+      "pais1": "ITA",
+      "pais2": "SUI",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m021": {
+      "id": "m021",
+      "fase": "grupos",
+      "grupo": "D",
+      "jornada": 2,
+      "fecha": "2026-06-11",
+      "hora": "16:00",
+      "pais1": "ESP",
+      "pais2": "ITA",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m022": {
+      "id": "m022",
+      "fase": "grupos",
+      "grupo": "D",
+      "jornada": 2,
+      "fecha": "2026-06-12",
+      "hora": "19:00",
+      "pais1": "POR",
+      "pais2": "SUI",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m023": {
+      "id": "m023",
+      "fase": "grupos",
+      "grupo": "D",
+      "jornada": 3,
+      "fecha": "2026-06-13",
+      "hora": "16:00",
+      "pais1": "ESP",
+      "pais2": "SUI",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m024": {
+      "id": "m024",
+      "fase": "grupos",
+      "grupo": "D",
+      "jornada": 3,
+      "fecha": "2026-06-14",
+      "hora": "19:00",
+      "pais1": "POR",
+      "pais2": "ITA",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m025": {
+      "id": "m025",
+      "fase": "grupos",
+      "grupo": "E",
+      "jornada": 1,
+      "fecha": "2026-06-15",
+      "hora": "16:00",
+      "pais1": "ENG",
+      "pais2": "FRA",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m026": {
+      "id": "m026",
+      "fase": "grupos",
+      "grupo": "E",
+      "jornada": 1,
+      "fecha": "2026-06-16",
+      "hora": "19:00",
+      "pais1": "BEL",
+      "pais2": "NED",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m027": {
+      "id": "m027",
+      "fase": "grupos",
+      "grupo": "E",
+      "jornada": 2,
+      "fecha": "2026-06-17",
+      "hora": "16:00",
+      "pais1": "ENG",
+      "pais2": "BEL",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m028": {
+      "id": "m028",
+      "fase": "grupos",
+      "grupo": "E",
+      "jornada": 2,
+      "fecha": "2026-06-18",
+      "hora": "19:00",
+      "pais1": "FRA",
+      "pais2": "NED",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m029": {
+      "id": "m029",
+      "fase": "grupos",
+      "grupo": "E",
+      "jornada": 3,
+      "fecha": "2026-06-19",
+      "hora": "16:00",
+      "pais1": "ENG",
+      "pais2": "NED",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m030": {
+      "id": "m030",
+      "fase": "grupos",
+      "grupo": "E",
+      "jornada": 3,
+      "fecha": "2026-06-20",
+      "hora": "19:00",
+      "pais1": "FRA",
+      "pais2": "BEL",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m031": {
+      "id": "m031",
+      "fase": "grupos",
+      "grupo": "F",
+      "jornada": 1,
+      "fecha": "2026-06-21",
+      "hora": "16:00",
+      "pais1": "GER",
+      "pais2": "CRO",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m032": {
+      "id": "m032",
+      "fase": "grupos",
+      "grupo": "F",
+      "jornada": 1,
+      "fecha": "2026-06-22",
+      "hora": "19:00",
+      "pais1": "DEN",
+      "pais2": "SWE",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m033": {
+      "id": "m033",
+      "fase": "grupos",
+      "grupo": "F",
+      "jornada": 2,
+      "fecha": "2026-06-23",
+      "hora": "16:00",
+      "pais1": "GER",
+      "pais2": "DEN",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m034": {
+      "id": "m034",
+      "fase": "grupos",
+      "grupo": "F",
+      "jornada": 2,
+      "fecha": "2026-06-24",
+      "hora": "19:00",
+      "pais1": "CRO",
+      "pais2": "SWE",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m035": {
+      "id": "m035",
+      "fase": "grupos",
+      "grupo": "F",
+      "jornada": 3,
+      "fecha": "2026-06-25",
+      "hora": "16:00",
+      "pais1": "GER",
+      "pais2": "SWE",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m036": {
+      "id": "m036",
+      "fase": "grupos",
+      "grupo": "F",
+      "jornada": 3,
+      "fecha": "2026-06-26",
+      "hora": "19:00",
+      "pais1": "CRO",
+      "pais2": "DEN",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m037": {
+      "id": "m037",
+      "fase": "grupos",
+      "grupo": "G",
+      "jornada": 1,
+      "fecha": "2026-06-27",
+      "hora": "16:00",
+      "pais1": "JPN",
+      "pais2": "KOR",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m038": {
+      "id": "m038",
+      "fase": "grupos",
+      "grupo": "G",
+      "jornada": 1,
+      "fecha": "2026-06-28",
+      "hora": "19:00",
+      "pais1": "AUS",
+      "pais2": "IRN",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m039": {
+      "id": "m039",
+      "fase": "grupos",
+      "grupo": "G",
+      "jornada": 2,
+      "fecha": "2026-06-29",
+      "hora": "16:00",
+      "pais1": "JPN",
+      "pais2": "AUS",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m040": {
+      "id": "m040",
+      "fase": "grupos",
+      "grupo": "G",
+      "jornada": 2,
+      "fecha": "2026-06-30",
+      "hora": "19:00",
+      "pais1": "KOR",
+      "pais2": "IRN",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m041": {
+      "id": "m041",
+      "fase": "grupos",
+      "grupo": "G",
+      "jornada": 3,
+      "fecha": "2026-06-11",
+      "hora": "16:00",
+      "pais1": "JPN",
+      "pais2": "IRN",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m042": {
+      "id": "m042",
+      "fase": "grupos",
+      "grupo": "G",
+      "jornada": 3,
+      "fecha": "2026-06-12",
+      "hora": "19:00",
+      "pais1": "KOR",
+      "pais2": "AUS",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m043": {
+      "id": "m043",
+      "fase": "grupos",
+      "grupo": "H",
+      "jornada": 1,
+      "fecha": "2026-06-13",
+      "hora": "16:00",
+      "pais1": "MAR",
+      "pais2": "SEN",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m044": {
+      "id": "m044",
+      "fase": "grupos",
+      "grupo": "H",
+      "jornada": 1,
+      "fecha": "2026-06-14",
+      "hora": "19:00",
+      "pais1": "NGA",
+      "pais2": "TUN",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m045": {
+      "id": "m045",
+      "fase": "grupos",
+      "grupo": "H",
+      "jornada": 2,
+      "fecha": "2026-06-15",
+      "hora": "16:00",
+      "pais1": "MAR",
+      "pais2": "NGA",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m046": {
+      "id": "m046",
+      "fase": "grupos",
+      "grupo": "H",
+      "jornada": 2,
+      "fecha": "2026-06-16",
+      "hora": "19:00",
+      "pais1": "SEN",
+      "pais2": "TUN",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m047": {
+      "id": "m047",
+      "fase": "grupos",
+      "grupo": "H",
+      "jornada": 3,
+      "fecha": "2026-06-17",
+      "hora": "16:00",
+      "pais1": "MAR",
+      "pais2": "TUN",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m048": {
+      "id": "m048",
+      "fase": "grupos",
+      "grupo": "H",
+      "jornada": 3,
+      "fecha": "2026-06-18",
+      "hora": "19:00",
+      "pais1": "SEN",
+      "pais2": "NGA",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m049": {
+      "id": "m049",
+      "fase": "dieciseisavos",
+      "grupo": null,
+      "jornada": 4,
+      "fecha": "2026-07-01",
+      "hora": "17:00",
+      "pais1": "1A",
+      "pais2": "2B",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m050": {
+      "id": "m050",
+      "fase": "dieciseisavos",
+      "grupo": null,
+      "jornada": 5,
+      "fecha": "2026-07-02",
+      "hora": "20:00",
+      "pais1": "1C",
+      "pais2": "2D",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m051": {
+      "id": "m051",
+      "fase": "dieciseisavos",
+      "grupo": null,
+      "jornada": 6,
+      "fecha": "2026-07-03",
+      "hora": "17:00",
+      "pais1": "1E",
+      "pais2": "2F",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m052": {
+      "id": "m052",
+      "fase": "dieciseisavos",
+      "grupo": null,
+      "jornada": 7,
+      "fecha": "2026-07-04",
+      "hora": "20:00",
+      "pais1": "1G",
+      "pais2": "2H",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m053": {
+      "id": "m053",
+      "fase": "dieciseisavos",
+      "grupo": null,
+      "jornada": 8,
+      "fecha": "2026-07-05",
+      "hora": "17:00",
+      "pais1": "2A",
+      "pais2": "1B",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m054": {
+      "id": "m054",
+      "fase": "dieciseisavos",
+      "grupo": null,
+      "jornada": 9,
+      "fecha": "2026-07-06",
+      "hora": "20:00",
+      "pais1": "2C",
+      "pais2": "1D",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m055": {
+      "id": "m055",
+      "fase": "dieciseisavos",
+      "grupo": null,
+      "jornada": 10,
+      "fecha": "2026-07-07",
+      "hora": "17:00",
+      "pais1": "2E",
+      "pais2": "1F",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m056": {
+      "id": "m056",
+      "fase": "dieciseisavos",
+      "grupo": null,
+      "jornada": 11,
+      "fecha": "2026-07-08",
+      "hora": "20:00",
+      "pais1": "2G",
+      "pais2": "1H",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m057": {
+      "id": "m057",
+      "fase": "octavos",
+      "grupo": null,
+      "jornada": 12,
+      "fecha": "2026-07-09",
+      "hora": "17:00",
+      "pais1": "W49",
+      "pais2": "W50",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m058": {
+      "id": "m058",
+      "fase": "octavos",
+      "grupo": null,
+      "jornada": 13,
+      "fecha": "2026-07-10",
+      "hora": "20:00",
+      "pais1": "W51",
+      "pais2": "W52",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m059": {
+      "id": "m059",
+      "fase": "octavos",
+      "grupo": null,
+      "jornada": 14,
+      "fecha": "2026-07-11",
+      "hora": "17:00",
+      "pais1": "W53",
+      "pais2": "W54",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m060": {
+      "id": "m060",
+      "fase": "octavos",
+      "grupo": null,
+      "jornada": 15,
+      "fecha": "2026-07-12",
+      "hora": "20:00",
+      "pais1": "W55",
+      "pais2": "W56",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m061": {
+      "id": "m061",
+      "fase": "cuartos",
+      "grupo": null,
+      "jornada": 16,
+      "fecha": "2026-07-13",
+      "hora": "17:00",
+      "pais1": "W57",
+      "pais2": "W58",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m062": {
+      "id": "m062",
+      "fase": "cuartos",
+      "grupo": null,
+      "jornada": 17,
+      "fecha": "2026-07-14",
+      "hora": "20:00",
+      "pais1": "W59",
+      "pais2": "W60",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m063": {
+      "id": "m063",
+      "fase": "semifinal",
+      "grupo": null,
+      "jornada": 18,
+      "fecha": "2026-07-15",
+      "hora": "17:00",
+      "pais1": "W61",
+      "pais2": "W62",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    },
+    "m064": {
+      "id": "m064",
+      "fase": "final",
+      "grupo": null,
+      "jornada": 19,
+      "fecha": "2026-07-16",
+      "hora": "20:00",
+      "pais1": "W63",
+      "pais2": "W64",
+      "estado": "programado",
+      "resultado": {
+        "goles1": null,
+        "goles2": null
+      }
+    }
+  },
+  "predicciones": {},
+  "rankings": {
+    "general": [],
+    "grupo_2A": [],
+    "grupo_2C": [],
+    "grupo_2D": [],
+    "grupo_2F": [],
+    "femenil_general": [],
+    "femenil_grupo_2A": [],
+    "femenil_grupo_2C": [],
+    "femenil_grupo_2D": [],
+    "femenil_grupo_2F": []
+  },
+  "chat_general": {
+    "estado": "abierto"
+  },
+  "codigos_invitacion": {
+    "Q2026-001": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-002": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-003": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-004": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-005": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-006": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-007": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-008": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-009": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-010": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-011": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-012": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-013": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-014": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-015": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-016": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-017": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-018": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-019": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-020": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-021": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-022": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-023": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-024": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-025": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-026": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-027": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-028": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-029": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-030": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-031": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-032": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-033": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-034": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-035": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-036": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-037": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-038": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-039": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-040": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-041": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-042": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-043": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-044": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-045": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-046": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-047": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-048": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-049": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-050": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-051": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-052": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-053": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-054": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-055": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-056": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-057": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-058": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-059": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-060": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-061": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-062": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-063": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-064": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-065": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-066": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-067": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-068": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-069": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-070": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-071": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-072": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-073": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-074": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-075": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-076": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-077": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-078": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-079": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-080": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-081": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-082": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-083": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-084": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-085": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-086": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-087": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-088": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-089": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-090": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-091": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-092": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-093": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-094": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-095": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-096": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-097": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-098": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-099": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-100": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-101": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-102": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-103": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-104": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-105": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-106": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-107": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-108": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-109": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-110": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-111": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-112": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-113": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-114": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-115": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-116": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-117": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-118": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-119": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-120": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-121": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-122": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-123": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-124": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-125": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-126": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-127": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-128": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-129": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-130": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-131": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-132": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-133": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-134": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-135": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-136": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    },
+    "Q2026-137": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2A",
+      "creado_en": 1779816119557
+    },
+    "Q2026-138": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2C",
+      "creado_en": 1779816119557
+    },
+    "Q2026-139": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2D",
+      "creado_en": 1779816119557
+    },
+    "Q2026-140": {
+      "usado": false,
+      "usuario_id": null,
+      "grupo_sugerido": "2F",
+      "creado_en": 1779816119557
+    }
+  },
+  "usuarios": {}
+}
