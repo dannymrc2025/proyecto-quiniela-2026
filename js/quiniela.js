@@ -29,7 +29,20 @@ function inicializarApp() {
   }
 }
 
+function ocultarCapasIniciales() {
+  const loadingScreen = document.getElementById('loading-screen');
+  if (loadingScreen) loadingScreen.style.display = 'none';
+
+  const loginScreenLegacy = document.getElementById('login-screen');
+  if (loginScreenLegacy) {
+    loginScreenLegacy.classList.remove('visible');
+    loginScreenLegacy.style.display = 'none';
+  }
+}
+
 function mostrarLoginModal() {
+  ocultarCapasIniciales();
+
   const loginError = document.getElementById('modal-login-error');
   if (loginError) loginError.textContent = '';
   document.getElementById('modal-login').style.display = 'flex';
@@ -143,6 +156,8 @@ function mostrarNotificacion(tipo, mensaje, duracion = 5000) {
 }
 
 function mostrarApp() {
+  ocultarCapasIniciales();
+
   const modalLogin = document.getElementById('modal-login');
   if (modalLogin) modalLogin.style.display = 'none';
 
