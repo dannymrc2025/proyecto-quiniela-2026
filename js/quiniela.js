@@ -18,6 +18,8 @@ let currentUser = null;
 let listenersRegistrados = false;
 
 function inicializarApp() {
+  registrarEventListenersUI();
+
   // Verificar si usuario esta registrado en localStorage
   const usuarioGuardado = localStorage.getItem('usuarioId');
   if (usuarioGuardado) {
@@ -28,24 +30,35 @@ function inicializarApp() {
 }
 
 function mostrarLoginModal() {
+  const loginError = document.getElementById('modal-login-error');
+  if (loginError) loginError.textContent = '';
   document.getElementById('modal-login').style.display = 'flex';
 }
 
 function registrarUsuario(codigo, nombre, grupo, sexo) {
+  const loginError = document.getElementById('modal-login-error');
+  if (loginError) loginError.textContent = '';
+
+  const codigoNormalizado = (codigo || '').toString().trim().toUpperCase();
+  const nombreNormalizado = (nombre || '').toString().trim();
+
   if (!codigo || !nombre || !grupo || !sexo) {
+    if (loginError) loginError.textContent = 'Todos los campos son obligatorios.';
     mostrarNotificacion('error', '❌ Todos los campos son obligatorios');
     return;
   }
 
   // Validar codigo en Firebase
-  db.ref(`codigos_invitacion/${codigo}`).once('value', (snap) => {
+  db.ref(`codigos_invitacion/${codigoNormalizado}`).once('value', (snap) => {
     if (!snap.exists()) {
+      if (loginError) loginError.textContent = 'Código inválido. Verifica e intenta de nuevo.';
       mostrarNotificacion('error', '❌ Código inválido');
       return;
     }
 
     const codigoData = snap.val();
     if (codigoData.usado === true) {
+      if (loginError) loginError.textContent = 'Código ya fue usado.';
       mostrarNotificacion('error', '❌ Código ya fue usado');
       return;
     }
@@ -54,11 +67,11 @@ function registrarUsuario(codigo, nombre, grupo, sexo) {
     const usuarioId = 'usuario_' + Date.now();
     const usuarioData = {
       id: usuarioId,
-      nombre: nombre,
+      nombre: nombreNormalizado,
       grupo: grupo,
       sexo: sexo,
       rol: 'alumno',
-      codigo_invitacion: codigo,
+      codigo_invitacion: codigoNormalizado,
       fecha_registro: Date.now(),
       estadisticas: {
         puntos_totales: 0,
@@ -76,8 +89,8 @@ function registrarUsuario(codigo, nombre, grupo, sexo) {
     };
 
     db.ref(`usuarios/${usuarioId}`).set(usuarioData);
-    db.ref(`codigos_invitacion/${codigo}/usado`).set(true);
-    db.ref(`codigos_invitacion/${codigo}/usuario_id`).set(usuarioId);
+    db.ref(`codigos_invitacion/${codigoNormalizado}/usado`).set(true);
+    db.ref(`codigos_invitacion/${codigoNormalizado}/usuario_id`).set(usuarioId);
 
     localStorage.setItem('usuarioId', usuarioId);
     currentUser = usuarioData;
