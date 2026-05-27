@@ -1080,10 +1080,229 @@
       color: var(--azul-fifa);
       margin-bottom: 14px;
     }
+    #modal-login .app-modal {
+      background:
+        radial-gradient(120% 110% at 0% 0%, rgba(42,57,141,0.12) 0%, rgba(42,57,141,0) 55%),
+        radial-gradient(110% 100% at 100% 100%, rgba(60,172,59,0.12) 0%, rgba(60,172,59,0) 50%),
+        linear-gradient(180deg, #ffffff 0%, #fdfefe 100%);
+      border: 1px solid #dfe5ff;
+    }
+    .login-hero {
+      border: 1px solid rgba(42,57,141,0.14);
+      border-radius: 14px;
+      padding: 12px 12px 10px;
+      margin-bottom: 12px;
+      background:
+        linear-gradient(95deg,
+          rgba(42,57,141,0.1) 0%,
+          rgba(0,188,212,0.1) 34%,
+          rgba(205,220,57,0.14) 66%,
+          rgba(230,29,37,0.09) 100%);
+    }
+    .login-hero-title {
+      margin-bottom: 6px;
+      animation: login-title-in 0.38s ease both;
+    }
     .modal-subtitle {
       font-size: 0.83rem;
       color: #777;
       margin-bottom: 12px;
+    }
+    .login-hero .modal-subtitle {
+      color: #3e4d6c;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .login-palette-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 6px;
+    }
+    .login-palette-chip {
+      height: 6px;
+      border-radius: 999px;
+      opacity: 0.95;
+    }
+    .login-palette-chip.azul { background: var(--azul-fifa); }
+    .login-palette-chip.verde { background: var(--verde-fifa); }
+    .login-palette-chip.turquesa { background: var(--turquesa-fifa); }
+    .login-palette-chip.lima { background: var(--lima-fifa); }
+    .login-palette-chip.rojo { background: var(--rojo-fifa); }
+    @keyframes login-title-in {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .login-presentacion {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .login-presentacion .login-choice-btn {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+    }
+    .login-presentacion.animate .login-choice-btn {
+      animation: login-card-in 0.42s ease forwards;
+    }
+    .login-presentacion.animate .login-choice-btn:nth-child(1) { animation-delay: 0.02s; }
+    .login-presentacion.animate .login-choice-btn:nth-child(2) { animation-delay: 0.09s; }
+    .login-presentacion.animate .login-choice-btn:nth-child(3) { animation-delay: 0.16s; }
+    @keyframes login-card-in {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .login-choice-btn {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--gris-claro);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--gris-oscuro);
+      padding: 13px 14px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(42, 57, 141, 0.08);
+      transition: border-color var(--trans), color var(--trans), background var(--trans), transform var(--trans), box-shadow var(--trans);
+    }
+    .login-choice-btn:hover,
+    .login-choice-btn:focus-visible {
+      border-color: var(--azul-fifa);
+      color: var(--azul-fifa);
+      background: #f5f7ff;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(42, 57, 141, 0.18);
+    }
+    .login-choice-btn:focus-visible {
+      outline: none;
+    }
+    .login-choice-btn[data-choice="alumno-login"]:hover,
+    .login-choice-btn[data-choice="alumno-login"]:focus-visible {
+      border-color: var(--verde-fifa);
+      color: #1f7c42;
+      background: #f1fbf5;
+      box-shadow: 0 6px 14px rgba(60, 172, 59, 0.2);
+    }
+    .login-choice-btn[data-choice="alumno-login"]:hover .login-choice-desc,
+    .login-choice-btn[data-choice="alumno-login"]:focus-visible .login-choice-desc {
+      color: #2d8f52;
+    }
+    .login-choice-btn[data-choice="alumno-registro"]:hover,
+    .login-choice-btn[data-choice="alumno-registro"]:focus-visible {
+      border-color: var(--turquesa-fifa);
+      color: #007e8d;
+      background: #effcff;
+      box-shadow: 0 6px 14px rgba(0, 188, 212, 0.22);
+    }
+    .login-choice-btn[data-choice="alumno-registro"]:hover .login-choice-desc,
+    .login-choice-btn[data-choice="alumno-registro"]:focus-visible .login-choice-desc {
+      color: #2d8f9a;
+    }
+    .login-choice-btn[data-choice="profesor"]:hover,
+    .login-choice-btn[data-choice="profesor"]:focus-visible {
+      border-color: var(--azul-fifa);
+      color: var(--azul-fifa);
+      background: linear-gradient(90deg, rgba(42,57,141,0.07), rgba(230,29,37,0.06));
+      box-shadow: 0 6px 14px rgba(42, 57, 141, 0.2);
+    }
+    .login-choice-btn[data-choice="profesor"]:hover .login-choice-desc,
+    .login-choice-btn[data-choice="profesor"]:focus-visible .login-choice-desc {
+      color: #4d5688;
+    }
+    .login-choice-btn .login-choice-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 900;
+      flex-shrink: 0;
+      border: 1px solid transparent;
+      background: #eef2ff;
+      color: var(--azul-fifa);
+    }
+    .login-choice-btn .login-choice-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .login-choice-btn .login-choice-title {
+      font-size: 0.9rem;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+    .login-choice-btn .login-choice-desc {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #6f6f6f;
+      line-height: 1.25;
+    }
+    .login-choice-btn .login-choice-tag {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 4px;
+      width: fit-content;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.3px;
+      border: 1px solid transparent;
+      text-transform: uppercase;
+    }
+    .login-choice-btn[data-choice="alumno-login"] .login-choice-icon {
+      background: #e9f8f0;
+      color: #1e7f4f;
+      border-color: #cfeeda;
+    }
+    .login-choice-btn[data-choice="alumno-login"] .login-choice-tag {
+      background: #e9f8f0;
+      color: #1e7f4f;
+      border-color: #cfeeda;
+    }
+    .login-choice-btn[data-choice="alumno-registro"] .login-choice-icon {
+      background: #fff4e8;
+      color: #b35b00;
+      border-color: #ffe2c3;
+    }
+    .login-choice-btn[data-choice="alumno-registro"] .login-choice-tag {
+      background: #e7fbff;
+      color: #007e8d;
+      border-color: #c5f1f7;
+    }
+    .login-choice-btn[data-choice="profesor"] .login-choice-icon {
+      background: #eef2ff;
+      color: var(--azul-fifa);
+      border-color: #d9e1ff;
+    }
+    .login-choice-btn[data-choice="profesor"] .login-choice-tag {
+      background: #eef2ff;
+      color: var(--azul-fifa);
+      border-color: #d9e1ff;
+    }
+    .login-panel {
+      display: none;
+    }
+    .login-panel.active {
+      display: block;
+    }
+    .login-back-row {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 12px;
     }
     .modal-form-grid {
       display: grid;
@@ -2265,45 +2484,109 @@
   ============================================================ -->
   <div class="app-modal-overlay dark-80" id="modal-login">
     <div class="app-modal">
-      <h2>Iniciar sesión / Registro</h2>
-      <p class="modal-subtitle">Si ya te registraste: entra solo con tu código de 5 caracteres. Si es tu primera vez: completa también nombre, grupo y sexo.</p>
+      <div class="login-hero">
+        <h2 class="login-hero-title" id="modal-login-title">Bienvenido</h2>
+        <p class="modal-subtitle" id="modal-login-subtitle">Selecciona cómo quieres entrar.</p>
+        <div class="login-palette-row" aria-hidden="true">
+          <span class="login-palette-chip azul"></span>
+          <span class="login-palette-chip verde"></span>
+          <span class="login-palette-chip turquesa"></span>
+          <span class="login-palette-chip lima"></span>
+          <span class="login-palette-chip rojo"></span>
+        </div>
+      </div>
 
-      <div class="modal-form-grid">
-        <div class="modal-field full">
-          <label for="modal-login-code">Código invitación (5 caracteres)</label>
-          <input id="modal-login-code" type="text" placeholder="Ej. A1B2C" maxlength="5" />
+      <div class="login-presentacion" id="modal-login-presentacion">
+        <button class="login-choice-btn" id="btn-presentacion-alumno-login" data-choice="alumno-login">
+          <span class="login-choice-icon">🎓</span>
+          <span class="login-choice-content">
+            <span class="login-choice-title">Ingresar como alumno</span>
+            <span class="login-choice-desc">Ya tienes código y cuenta activa</span>
+            <span class="login-choice-tag">Acceso rápido</span>
+          </span>
+        </button>
+        <button class="login-choice-btn" id="btn-presentacion-alumno-registro" data-choice="alumno-registro">
+          <span class="login-choice-icon">📝</span>
+          <span class="login-choice-content">
+            <span class="login-choice-title">Registrarse como alumno</span>
+            <span class="login-choice-desc">Primera vez: crea tu acceso con código</span>
+            <span class="login-choice-tag">Nuevo ingreso</span>
+          </span>
+        </button>
+        <button class="login-choice-btn" id="btn-presentacion-profesor" data-choice="profesor">
+          <span class="login-choice-icon">👨‍🏫</span>
+          <span class="login-choice-content">
+            <span class="login-choice-title">Ingresar como profesor (admin)</span>
+            <span class="login-choice-desc">Acceso al módulo docente y maestro</span>
+            <span class="login-choice-tag">Control docente</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="login-panel" id="modal-panel-alumno">
+        <div class="modal-form-grid">
+          <div class="modal-field full">
+            <label for="modal-login-code">Código invitación (5 caracteres)</label>
+            <input id="modal-login-code" type="text" placeholder="Ej. A1B2C" maxlength="5" />
+          </div>
+
+          <div class="modal-field full" id="modal-field-alumno-nombre">
+            <label for="modal-login-name">Nombre completo (solo primera vez)</label>
+            <input id="modal-login-name" type="text" placeholder="Nombre y apellidos" />
+          </div>
+
+          <div class="modal-field" id="modal-field-alumno-grupo">
+            <label for="modal-login-group">Grupo</label>
+            <select id="modal-login-group">
+              <option value="">Selecciona grupo</option>
+              <option value="2A">2A</option>
+              <option value="2C">2C</option>
+              <option value="2D">2D</option>
+              <option value="2F">2F</option>
+            </select>
+          </div>
+
+          <div class="modal-field" id="modal-field-alumno-sexo">
+            <label for="modal-login-sex">Sexo</label>
+            <select id="modal-login-sex">
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+            </select>
+          </div>
         </div>
 
-        <div class="modal-field full">
-          <label for="modal-login-name">Nombre completo (solo primera vez)</label>
-          <input id="modal-login-name" type="text" placeholder="Nombre y apellidos" />
+        <div class="modal-actions-row">
+          <button class="modal-btn primary" id="btn-modal-registrarme">CONTINUAR</button>
         </div>
 
-        <div class="modal-field">
-          <label for="modal-login-group">Grupo</label>
-          <select id="modal-login-group">
-            <option value="">Selecciona grupo</option>
-            <option value="2A">2A</option>
-            <option value="2C">2C</option>
-            <option value="2D">2D</option>
-            <option value="2F">2F</option>
-          </select>
+        <div class="login-back-row">
+          <button class="modal-btn" id="btn-login-back-menu">← Volver</button>
+        </div>
+      </div>
+
+      <div class="login-panel" id="modal-panel-profesor">
+        <div class="modal-form-grid">
+          <div class="modal-field full">
+            <label for="modal-prof-code">Código de invitación del profesor</label>
+            <input id="modal-prof-code" type="text" placeholder="Ej. A1B2C" maxlength="5" />
+          </div>
+
+          <div class="modal-field full">
+            <label for="modal-prof-pass">Clave de módulo docente</label>
+            <input id="modal-prof-pass" type="password" placeholder="Ingresa la clave docente" />
+          </div>
         </div>
 
-        <div class="modal-field">
-          <label for="modal-login-sex">Sexo</label>
-          <select id="modal-login-sex">
-            <option value="M">Masculino</option>
-            <option value="F">Femenino</option>
-          </select>
+        <div class="modal-actions-row">
+          <button class="modal-btn primary" id="btn-modal-profesor">INGRESAR COMO PROFESOR</button>
+        </div>
+
+        <div class="login-back-row">
+          <button class="modal-btn" id="btn-prof-back-menu">← Volver</button>
         </div>
       </div>
 
       <div class="modal-error" id="modal-login-error"></div>
-
-      <div class="modal-actions-row">
-        <button class="modal-btn primary" id="btn-modal-registrarme">ENTRAR / REGISTRARME</button>
-      </div>
     </div>
   </div>
 
