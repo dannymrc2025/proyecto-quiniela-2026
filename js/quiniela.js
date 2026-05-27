@@ -2344,11 +2344,7 @@ function hacerPrediccion(usuarioId, partidoId, goles1, goles2) {
           mostrarNotificacion('warning', '⚠️ Conexión inestable: guardado por canal alterno');
         }
 
-        if (typeof window.closePredictionModal === 'function') {
-          window.closePredictionModal();
-        } else {
-          cerrarModal('modal-prediction');
-        }
+        cerrarModalPrediccionRobusto();
 
         const estadoPartido = (partido && partido.estado ? String(partido.estado).toLowerCase() : '');
         filtroPartidosActivo = estadoPartido === 'finalizado' ? 'jugados' : 'proximos';
@@ -2849,6 +2845,24 @@ function abrirModalPrediccion(matchData) {
     return;
   }
   abrirModal('modal-prediction');
+}
+
+function cerrarModalPrediccionRobusto() {
+  try {
+    if (typeof window.closePredictionModal === 'function') {
+      window.closePredictionModal();
+    }
+  } catch (_) {}
+
+  try {
+    cerrarModal('modal-prediction');
+  } catch (_) {}
+
+  const modal = document.getElementById('modal-prediction');
+  if (modal) {
+    modal.classList.remove('open');
+    modal.style.display = 'none';
+  }
 }
 
 function guardarPrediccion() {
