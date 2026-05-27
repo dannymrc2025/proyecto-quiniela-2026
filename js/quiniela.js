@@ -1573,8 +1573,8 @@ function guardarResultadoModuloMaestro(finalizar = false) {
       updates.estado = 'finalizado';
     }
 
-    const regresarAFixtureConMarcador = () => {
-      filtroPartidosActivo = 'jugados';
+    const regresarAFixtureConMarcador = (mostrarJugados = false) => {
+      filtroPartidosActivo = mostrarJugados ? 'jugados' : 'proximos';
       cambiarTab('partidos');
       cargarPartidos();
       if (typeof window.scrollTo === 'function') {
@@ -1589,7 +1589,7 @@ function guardarResultadoModuloMaestro(finalizar = false) {
         mostrarNotificacion('success', '✅ Marcador guardado (aún no finalizado)');
         cargarPartidosModuloMaestro();
         cargarDetallePartidoModuloMaestro(true);
-        regresarAFixtureConMarcador();
+        regresarAFixtureConMarcador(false);
         return;
       }
 
@@ -1612,7 +1612,7 @@ function guardarResultadoModuloMaestro(finalizar = false) {
         mostrarNotificacion('warning', '⚠️ Puntos ya calculados anteriormente para este partido');
         cargarPartidosModuloMaestro();
         cargarDetallePartidoModuloMaestro(true);
-        regresarAFixtureConMarcador();
+        regresarAFixtureConMarcador(true);
         return;
       }
 
@@ -1650,7 +1650,7 @@ function guardarResultadoModuloMaestro(finalizar = false) {
       mostrarNotificacion('success', '✅ Partido finalizado y puntos calculados');
       cargarPartidosModuloMaestro();
       cargarDetallePartidoModuloMaestro(true);
-      regresarAFixtureConMarcador();
+      regresarAFixtureConMarcador(true);
     };
 
     actualizarNodoConFallback(`partidos/${partidoId}`, updates)
@@ -2759,11 +2759,7 @@ function mostrarPartidosEnUI(partidos, prediccionesUsuario = {}) {
     .filter((p) => !p.estado || p.estado === 'pendiente' || p.estado === 'programado' || p.estado === 'proximo');
 
   const partidosJugados = partidos
-    .filter((p) => {
-      const resultado = obtenerResultadoPartido(p);
-      const tieneMarcador = resultado.goles1 !== null && resultado.goles2 !== null;
-      return p.estado === 'finalizado' || tieneMarcador;
-    })
+    .filter((p) => p.estado === 'finalizado')
     .sort((a, b) => {
       const fechaA = `${a.fecha || ''} ${a.hora || ''}`.trim();
       const fechaB = `${b.fecha || ''} ${b.hora || ''}`.trim();
@@ -2786,6 +2782,8 @@ function mostrarPartidosEnUI(partidos, prediccionesUsuario = {}) {
   } else {
     contenedorProximos.innerHTML = proximos.map((p) => {
       const pred = prediccionesUsuario[p.id] || null;
+      const resultadoParcial = obtenerResultadoPartido(p);
+      const tieneParcial = resultadoParcial.goles1 !== null && resultadoParcial.goles2 !== null;
       const predG1 = Number.parseInt(pred ? pred.goles1 : null, 10);
       const predG2 = Number.parseInt(pred ? pred.goles2 : null, 10);
       const tienePred = Number.isFinite(predG1) && Number.isFinite(predG2);
@@ -2820,6 +2818,7 @@ function mostrarPartidosEnUI(partidos, prediccionesUsuario = {}) {
           <span class="${clasePred}">${textoPred}</span>
           <button class="${claseBoton}" onclick="abrirModalPrediccion({id:'${escaparJsString(p.id)}', flagA:'${escaparJsString(p.bandera1 || '🏳️')}', teamA:'${escaparJsString(p.pais1 || 'Equipo 1')}', flagB:'${escaparJsString(p.bandera2 || '🏳️')}', teamB:'${escaparJsString(p.pais2 || 'Equipo 2')}', closeText:'${escaparJsString(obtenerTextoCierrePrediccion(p))}', isClosed:${estaCerradaPrediccion(p)}, predA:${tienePred ? predG1 : 0}, predB:${tienePred ? predG2 : 0}})">${textoBoton}</button>
         </div>
+        ${tieneParcial ? `<div style="font-size:0.82rem;color:#2A398D;margin-top:6px;padding:0 4px;">📌 Marcador capturado (sin finalizar): <strong>${resultadoParcial.goles1} - ${resultadoParcial.goles2}</strong></div>` : ''}
         <div style="font-size:0.8rem;color:#666;margin-top:6px;padding:0 4px;">⏰ ${escaparHtml(obtenerTextoCierrePrediccion(p))}</div>
       </article>
     `;
