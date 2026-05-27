@@ -1433,7 +1433,7 @@ function cargarPartidosModuloMaestro() {
   });
 }
 
-function cargarDetallePartidoModuloMaestro() {
+function cargarDetallePartidoModuloMaestro(preservarEstado = false) {
   const select = document.getElementById('admin-master-match-select');
   const input1 = document.getElementById('admin-master-goles1');
   const input2 = document.getElementById('admin-master-goles2');
@@ -1463,8 +1463,12 @@ function cargarDetallePartidoModuloMaestro() {
 
     const estado = partido.estado || 'programado';
     const calculado = partido.puntos_calculados === true ? 'Puntos calculados' : 'Sin cálculo de puntos';
-    resumen.textContent = `${partido.pais1 || 'Equipo 1'} vs ${partido.pais2 || 'Equipo 2'} · Estado: ${estado} · ${calculado}`;
-    actualizarEstadoMaestroResultados('Partido cargado. Puedes guardar marcador o finalizar.', 'info');
+    const golesActuales1 = Number.isFinite(resultado.goles1) ? resultado.goles1 : '-';
+    const golesActuales2 = Number.isFinite(resultado.goles2) ? resultado.goles2 : '-';
+    resumen.textContent = `${partido.pais1 || 'Equipo 1'} vs ${partido.pais2 || 'Equipo 2'} · Marcador: ${golesActuales1}-${golesActuales2} · Estado: ${estado} · ${calculado}`;
+    if (!preservarEstado) {
+      actualizarEstadoMaestroResultados('Partido cargado. Puedes guardar marcador o finalizar.', 'info');
+    }
   });
 }
 
@@ -1518,10 +1522,10 @@ function guardarResultadoModuloMaestro(finalizar = false) {
     const procesarDespuesDeGuardar = () => {
 
       if (!finalizar) {
-        actualizarEstadoMaestroResultados('Marcador guardado correctamente.', 'success');
-        mostrarNotificacion('success', '✅ Marcador guardado');
+        actualizarEstadoMaestroResultados('Marcador guardado correctamente. Usa Finalizar para cerrar partido y calcular puntos.', 'success');
+        mostrarNotificacion('success', '✅ Marcador guardado (aún no finalizado)');
         cargarPartidosModuloMaestro();
-        cargarDetallePartidoModuloMaestro();
+        cargarDetallePartidoModuloMaestro(true);
         return;
       }
 
@@ -1543,7 +1547,7 @@ function guardarResultadoModuloMaestro(finalizar = false) {
         actualizarEstadoMaestroResultados('Partido finalizado. Los puntos ya estaban calculados.', 'warning');
         mostrarNotificacion('warning', '⚠️ Puntos ya calculados anteriormente para este partido');
         cargarPartidosModuloMaestro();
-        cargarDetallePartidoModuloMaestro();
+        cargarDetallePartidoModuloMaestro(true);
         return;
       }
 
@@ -1571,7 +1575,7 @@ function guardarResultadoModuloMaestro(finalizar = false) {
           actualizarEstadoMaestroResultados(`Partido finalizado, puntos calculados y ganador ${info.ganador} enviado a la siguiente llave.`, 'success');
           mostrarNotificacion('success', `✅ ${info.ganador} avanzó automáticamente en el bracket`);
           cargarPartidosModuloMaestro();
-          cargarDetallePartidoModuloMaestro();
+          cargarDetallePartidoModuloMaestro(true);
         })
         .catch(() => {
           mostrarNotificacion('warning', '⚠️ El partido se finalizó, pero no se pudo propagar al siguiente cruce');
@@ -1580,7 +1584,7 @@ function guardarResultadoModuloMaestro(finalizar = false) {
       actualizarEstadoMaestroResultados('Partido finalizado y puntos calculados.', 'success');
       mostrarNotificacion('success', '✅ Partido finalizado y puntos calculados');
       cargarPartidosModuloMaestro();
-      cargarDetallePartidoModuloMaestro();
+      cargarDetallePartidoModuloMaestro(true);
     };
 
     actualizarNodoConFallback(`partidos/${partidoId}`, updates)
