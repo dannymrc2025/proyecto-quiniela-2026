@@ -2863,6 +2863,12 @@ function cerrarModalPrediccionRobusto() {
     modal.classList.remove('open');
     modal.style.display = 'none';
   }
+
+  const modalLegacy = document.getElementById('modal-prediccion');
+  if (modalLegacy) {
+    modalLegacy.classList.remove('open');
+    modalLegacy.style.display = 'none';
+  }
 }
 
 function guardarPrediccion() {
