@@ -79,6 +79,69 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* ============================================================
+       PANTALLA DE LOGIN / REGISTRO
+    ============================================================ */
+    #login-screen {
+      display: none;
+      position: fixed; inset: 0; z-index: 9000;
+      background: linear-gradient(135deg, var(--azul-fifa) 0%, var(--verde-fifa) 100%);
+      align-items: center; justify-content: center;
+      padding: 16px;
+    }
+    #login-screen.visible { display: flex; }
+
+    .login-card {
+      background: var(--blanco);
+      border-radius: 20px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    .login-card .brand {
+      text-align: center; margin-bottom: 28px;
+    }
+    .login-card .brand .ball { font-size: 3rem; }
+    .login-card .brand h1 {
+      font-size: 1.4rem; font-weight: 800;
+      color: var(--azul-fifa); margin-top: 8px;
+      line-height: 1.2;
+    }
+    .login-card .brand p {
+      font-size: 0.82rem; color: #888; margin-top: 4px;
+    }
+
+    /* Tabs login/registro */
+    .auth-tabs {
+      display: flex; border-bottom: 2px solid var(--gris-claro);
+      margin-bottom: 24px;
+    }
+    .auth-tab {
+      flex: 1; padding: 10px 0; text-align: center;
+      font-weight: 700; font-size: 0.9rem;
+      color: #aaa; cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px; transition: color var(--trans), border-color var(--trans);
+    }
+    .auth-tab.active { color: var(--azul-fifa); border-bottom-color: var(--azul-fifa); }
+
+    .auth-panel { display: none; flex-direction: column; gap: 14px; }
+    .auth-panel.active { display: flex; }
+
+    .field-group { display: flex; flex-direction: column; gap: 5px; }
+    .field-group label { font-size: 0.78rem; font-weight: 700; color: var(--gris-oscuro); text-transform: uppercase; letter-spacing: 0.5px; }
+    .field-group input,
+    .field-group select {
+      padding: 11px 14px; border: 1.5px solid var(--gris-claro);
+      border-radius: 8px; font-size: 0.95rem;
+      color: var(--gris-oscuro); background: var(--blanco);
+      transition: border-color var(--trans);
+      outline: none;
+    }
+    .field-group input:focus,
+    .field-group select:focus { border-color: var(--azul-fifa); }
+
     .btn-primary {
       padding: 13px 20px; border-radius: 10px;
       font-size: 0.95rem; font-weight: 800;
@@ -97,6 +160,14 @@
       transition: opacity var(--trans);
     }
     .btn-danger:hover { opacity: 0.85; }
+
+    .auth-error {
+      font-size: 0.82rem; color: var(--rojo-fifa);
+      text-align: center; min-height: 18px;
+    }
+    .invite-hint {
+      font-size: 0.78rem; color: #999; text-align: center; margin-top: -4px;
+    }
 
     /* ============================================================
        LAYOUT PRINCIPAL (ocultado hasta auth)
@@ -1615,6 +1686,7 @@
       display: flex;
     }
 
+    .login-card,
     .modal-box,
     .app-modal,
     .ranking-table-wrapper {
@@ -1684,6 +1756,72 @@
   <div id="loading-screen">
     <div class="spinner"></div>
     <h1>⚽ QUINIELA<br>MUNDIAL 2026</h1>
+  </div>
+
+  <!-- ============================================================
+       PANTALLA LOGIN / REGISTRO
+  ============================================================ -->
+  <div id="login-screen">
+    <div class="login-card">
+
+      <div class="brand">
+        <div class="ball">⚽</div>
+        <h1>QUINIELA MUNDIAL 2026</h1>
+        <p>Ingresa tu código de 5 caracteres en mayúscula para unirte</p>
+      </div>
+
+      <div class="auth-tabs">
+        <div class="auth-tab active" data-panel="login">Iniciar sesión</div>
+        <div class="auth-tab" data-panel="register">Registrarse</div>
+      </div>
+
+      <!-- Panel Login -->
+      <div class="auth-panel active" id="panel-login">
+        <div class="field-group">
+          <label for="login-code">Código de invitación (5 caracteres)</label>
+          <input type="text" id="login-code" placeholder="Ej. A1B2C" autocomplete="off" maxlength="5" />
+        </div>
+        <div class="field-group">
+          <label for="login-name">Nombre (solo primera vez, opcional aquí)</label>
+          <input type="text" id="login-name" placeholder="Se usa al registrarte por primera vez" autocomplete="name" />
+        </div>
+        <button class="btn-primary" id="btn-login">Entrar ➜</button>
+        <p class="auth-error" id="login-error"></p>
+      </div>
+
+      <!-- Panel Registro -->
+      <div class="auth-panel" id="panel-register">
+        <div class="field-group">
+          <label for="reg-invite">Código de invitación * (5 caracteres)</label>
+          <input type="text" id="reg-invite" placeholder="A1B2C" autocomplete="off" maxlength="5" />
+          <span class="invite-hint">Solicita el código al organizador de tu grupo. Se convierte a mayúsculas automáticamente.</span>
+        </div>
+        <div class="field-group">
+          <label for="reg-name">Nombre completo *</label>
+          <input type="text" id="reg-name" placeholder="Nombre y apellido" autocomplete="name" />
+        </div>
+        <div class="field-group">
+          <label for="reg-group">Grupo al que perteneces *</label>
+          <select id="reg-group">
+            <option value="">-- Selecciona tu grupo --</option>
+            <option value="2A">Grupo 2A</option>
+            <option value="2C">Grupo 2C</option>
+            <option value="2D">Grupo 2D</option>
+            <option value="2F">Grupo 2F</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="reg-gender">Género</label>
+          <select id="reg-gender">
+            <option value="M">Masculino 👨</option>
+            <option value="F">Femenino 👩</option>
+          </select>
+        </div>
+        <button class="btn-primary" id="btn-register">Registrarme ➜</button>
+        <p class="auth-error" id="register-error"></p>
+      </div>
+
+    </div>
   </div>
 
   <!-- ============================================================
