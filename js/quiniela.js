@@ -245,7 +245,13 @@ function construirEndpointFirebase(ruta) {
 
 async function establecerNodoConFallback(ruta, payload) {
   try {
-    await db.ref(ruta).set(payload);
+    const sdkWrite = db.ref(ruta).set(payload);
+    await Promise.race([
+      sdkWrite,
+      new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('sdk_timeout')), 2500);
+      })
+    ]);
     return { via: 'sdk' };
   } catch (error) {
     const endpoint = construirEndpointFirebase(ruta);
@@ -261,34 +267,6 @@ async function establecerNodoConFallback(ruta, payload) {
 
     return { via: 'rest' };
   }
-}
-
-async function leerNodoRemoto(ruta) {
-  const endpoint = construirEndpointFirebase(ruta);
-  const response = await fetch(endpoint, { cache: 'no-store' });
-  if (!response.ok) return null;
-  return response.json();
-}
-
-function pausa(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function confirmarPrediccionRemota(usuarioId, partidoId, goles1, goles2) {
-  const ruta = `predicciones/${usuarioId}/${partidoId}`;
-
-  for (let intento = 0; intento < 3; intento += 1) {
-    const remota = await leerNodoRemoto(ruta);
-    const savedG1 = Number.parseInt(remota && remota.goles1, 10);
-    const savedG2 = Number.parseInt(remota && remota.goles2, 10);
-    const ok = Number.isFinite(savedG1) && Number.isFinite(savedG2)
-      && savedG1 === goles1 && savedG2 === goles2;
-
-    if (ok) return true;
-    await pausa(500);
-  }
-
-  return false;
 }
 
 const FASES_GRUPO_OFICIAL = new Set([
@@ -2359,14 +2337,12 @@ function hacerPrediccion(usuarioId, partidoId, goles1, goles2) {
     const rutaPrediccion = `predicciones/${usuarioIdNormalizado}/${partidoIdNormalizado}`;
 
     establecerNodoConFallback(rutaPrediccion, payloadPrediccion)
-      .then(() => confirmarPrediccionRemota(usuarioIdNormalizado, partidoIdNormalizado, goles1, goles2))
-      .then((persistio) => {
-        if (!persistio) {
-          throw new Error('No se pudo confirmar la predicción en servidor');
-        }
-
+      .then((meta) => {
         prediccionesUsuarioActual[partidoIdNormalizado] = payloadPrediccion;
         mostrarNotificacion('success', '✅ Predicción guardada');
+        if (meta && meta.via === 'rest') {
+          mostrarNotificacion('warning', '⚠️ Conexión inestable: guardado por canal alterno');
+        }
 
         if (typeof window.closePredictionModal === 'function') {
           window.closePredictionModal();
@@ -2374,7 +2350,8 @@ function hacerPrediccion(usuarioId, partidoId, goles1, goles2) {
           cerrarModal('modal-prediction');
         }
 
-        filtroPartidosActivo = 'proximos';
+        const estadoPartido = (partido && partido.estado ? String(partido.estado).toLowerCase() : '');
+        filtroPartidosActivo = estadoPartido === 'finalizado' ? 'jugados' : 'proximos';
         cambiarTab('partidos');
         cargarPartidos();
         if (typeof window.scrollTo === 'function') {
@@ -2388,7 +2365,7 @@ function hacerPrediccion(usuarioId, partidoId, goles1, goles2) {
           return;
         }
 
-        mostrarNotificacion('error', '❌ No se pudo confirmar el guardado. Revisa conexión y vuelve a intentar.');
+        mostrarNotificacion('error', '❌ No se pudo guardar la predicción. Revisa conexión e intenta de nuevo.');
       });
   });
 }
