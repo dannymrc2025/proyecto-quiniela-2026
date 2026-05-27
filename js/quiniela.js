@@ -214,6 +214,29 @@ function normalizarFasePartido(fase) {
   return (fase || '').toString().trim().toLowerCase();
 }
 
+async function actualizarNodoConFallback(ruta, payload) {
+  try {
+    await db.ref(ruta).update(payload);
+    return { via: 'sdk' };
+  } catch (error) {
+    const base = (firebaseConfig.databaseURL || '').replace(/\/+$/, '');
+    const path = String(ruta || '').replace(/^\/+/, '');
+    const endpoint = `${base}/${path}.json`;
+
+    const response = await fetch(endpoint, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw error;
+    }
+
+    return { via: 'rest' };
+  }
+}
+
 const FASES_GRUPO_OFICIAL = new Set([
   'grupos',
   'fase de grupos',
@@ -1492,11 +1515,7 @@ function guardarResultadoModuloMaestro(finalizar = false) {
       updates.estado = 'finalizado';
     }
 
-    db.ref(`partidos/${partidoId}`).update(updates, (err) => {
-      if (err) {
-        actualizarEstadoMaestroResultados('Error al guardar resultado.', 'error');
-        return;
-      }
+    const procesarDespuesDeGuardar = () => {
 
       if (!finalizar) {
         actualizarEstadoMaestroResultados('Marcador guardado correctamente.', 'success');
@@ -1562,7 +1581,18 @@ function guardarResultadoModuloMaestro(finalizar = false) {
       mostrarNotificacion('success', '✅ Partido finalizado y puntos calculados');
       cargarPartidosModuloMaestro();
       cargarDetallePartidoModuloMaestro();
-    });
+    };
+
+    actualizarNodoConFallback(`partidos/${partidoId}`, updates)
+      .then((meta) => {
+        if (meta && meta.via === 'rest') {
+          mostrarNotificacion('warning', '⚠️ Conexión inestable: resultado guardado por canal alterno');
+        }
+        procesarDespuesDeGuardar();
+      })
+      .catch(() => {
+        actualizarEstadoMaestroResultados('Error al guardar resultado. Revisa tu conexión.', 'error');
+      });
   });
 }
 
