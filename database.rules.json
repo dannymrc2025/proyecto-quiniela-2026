@@ -32,6 +32,10 @@
       ".read": true,
       ".write": true
     },
+    "clasificaciones_grupo_test": {
+      ".read": true,
+      ".write": true
+    },
     "rankings": {
       ".read": true,
       ".write": "auth != null && root.child('usuarios').child(auth.uid).child('rol').val() === 'profesor'"

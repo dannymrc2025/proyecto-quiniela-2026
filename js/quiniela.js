@@ -208,6 +208,10 @@ function obtenerResultadoPartido(partido) {
   };
 }
 
+function normalizarFasePartido(fase) {
+  return (fase || '').toString().trim().toLowerCase();
+}
+
 function obtenerPuntajeConducta(equipo) {
   if (!equipo) return 0;
   if (Number.isFinite(Number(equipo.puntaje_conducta))) return Number(equipo.puntaje_conducta);
@@ -349,7 +353,12 @@ function ordenarTablaGrupoConDesempates(tabla, partidosGrupo, catalogoEquipos) {
   return salida;
 }
 
-async function calcularClasificacionesDeGrupos() {
+async function calcularClasificacionesDeGrupos(opciones = {}) {
+  const fasesObjetivo = Array.isArray(opciones.fases) && opciones.fases.length
+    ? new Set(opciones.fases.map((fase) => normalizarFasePartido(fase)).filter(Boolean))
+    : new Set(['grupos']);
+  const rutaDestino = opciones.rutaDestino || 'clasificaciones_grupo';
+
   const [partidosSnap, equiposSnap] = await Promise.all([
     db.ref('partidos').once('value'),
     db.ref('equipos').once('value')
@@ -363,7 +372,7 @@ async function calcularClasificacionesDeGrupos() {
   const partidosPorGrupo = new Map();
   partidosSnap.forEach((child) => {
     const partido = child.val() || {};
-    if ((partido.fase || '').toLowerCase() !== 'grupos') return;
+    if (!fasesObjetivo.has(normalizarFasePartido(partido.fase))) return;
     if (!partido.grupo) return;
     const grupo = partido.grupo.toString().trim();
     if (!partidosPorGrupo.has(grupo)) partidosPorGrupo.set(grupo, []);
@@ -398,7 +407,7 @@ async function calcularClasificacionesDeGrupos() {
     resultados[grupo] = tabla;
   });
 
-  await db.ref('clasificaciones_grupo').set(resultados);
+  await db.ref(rutaDestino).set(resultados);
   return resultados;
 }
 
@@ -410,7 +419,7 @@ function renderizarClasificacionesDeGrupos(resultados = {}) {
   const gruposOrden = Object.keys(resultados).sort((a, b) => a.localeCompare(b, 'es'));
   if (!gruposOrden.length) {
     contenedor.innerHTML = '<div style="padding:14px;color:#666;text-align:center;">No hay clasificaciones aún.</div>';
-    if (status) status.textContent = 'No hay partidos de grupo finalizados para calcular posiciones.';
+    if (status) status.textContent = 'No hay partidos finalizados en fases de posiciones para calcular tablas.';
     return;
   }
 
@@ -1476,6 +1485,21 @@ function guardarResultadoModuloMaestro(finalizar = false) {
       actualizarPuntosPartidoMejorado(partidoId, goles1, goles2);
       db.ref(`partidos/${partidoId}/puntos_calculados`).set(true);
       db.ref(`partidos/${partidoId}/puntos_calculados_timestamp`).set(Date.now());
+
+      const fasePartido = normalizarFasePartido(partido.fase);
+      if (fasePartido === 'grupos' || fasePartido === 'prueba_libertadores') {
+        const opcionesTabla = fasePartido === 'prueba_libertadores'
+          ? { fases: ['prueba_libertadores'], rutaDestino: 'clasificaciones_grupo_test' }
+          : { fases: ['grupos'], rutaDestino: 'clasificaciones_grupo' };
+
+        calcularClasificacionesDeGrupos(opcionesTabla)
+          .then((clasificaciones) => {
+            renderizarClasificacionesDeGrupos(clasificaciones);
+          })
+          .catch(() => {
+            actualizarEstadoMaestroResultados('Partido finalizado, pero no se pudo refrescar la tabla de posiciones.', 'warning');
+          });
+      }
 
       propagarGanadorPartidoEliminatoria(partidoId, partido, goles1, goles2)
         .then((info) => {
