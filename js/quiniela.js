@@ -34,11 +34,20 @@ function normalizarCodigoInvitacion(codigo) {
   return (codigo || '').toString().toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5);
 }
 
+function normalizarTextoRol(valor) {
+  return String(valor || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
 function esCodigoValido(codigo) {
   return /^[A-Z0-9]{5}$/.test(codigo || '');
 }
 
 function tieneAccesoDocente() {
+  if (esUsuarioAdmin()) return true;
   return sessionStorage.getItem('acceso_docente') === '1';
 }
 
@@ -48,17 +57,34 @@ function desbloquearModuloDocente() {
     return;
   }
 
-  const clave = window.prompt('Ingresa la contraseña del módulo docente');
-  if (clave === null) return;
+  sessionStorage.setItem('acceso_docente', '1');
+  mostrarNotificacion('success', '✅ Módulo docente habilitado automáticamente');
+  mostrarPerfil();
+}
 
-  if (clave.trim() === CLAVE_DOCENTE) {
-    sessionStorage.setItem('acceso_docente', '1');
-    mostrarNotificacion('success', '✅ Módulo docente desbloqueado');
-    mostrarPerfil();
+function abrirModuloMaestroDesdePrincipal() {
+  if (!esUsuarioAdmin()) {
+    mostrarNotificacion('error', '❌ Solo admin/docente puede acceder al módulo maestro');
     return;
   }
 
-  mostrarNotificacion('error', '❌ Contraseña docente incorrecta');
+  const clave = window.prompt('Ingresa el código de acceso del módulo maestro');
+  if (clave === null) return;
+
+  if (clave.trim() !== CLAVE_DOCENTE) {
+    mostrarNotificacion('error', '❌ Código incorrecto');
+    return;
+  }
+
+  sessionStorage.setItem('acceso_docente', '1');
+  mostrarNotificacion('success', '✅ Acceso concedido al módulo maestro');
+  cambiarTab('perfil');
+  mostrarPerfil();
+
+  const panelMaestro = document.getElementById('admin-master-panel');
+  if (panelMaestro) {
+    panelMaestro.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 function formatearGrupoUsuario(grupo) {
@@ -797,8 +823,17 @@ function mostrarLoginModal() {
 
 function esUsuarioAdmin() {
   if (!currentUser) return false;
-  const rol = (currentUser.rol || '').toLowerCase();
-  return rol === 'profesor' || rol === 'admin' || rol === 'organizador';
+  const rol = normalizarTextoRol(currentUser.rol);
+
+  if (rol === 'profesor' || rol === 'profesora' || rol === 'docente' || rol === 'admin' || rol === 'administrador' || rol === 'organizador' || rol === 'maestro' || rol === 'teacher') {
+    return true;
+  }
+
+  if (currentUser.admin === true || currentUser.es_admin === true || currentUser.profesor === true || currentUser.docente === true) {
+    return true;
+  }
+
+  return false;
 }
 
 function escaparHtml(value) {
@@ -1694,6 +1729,15 @@ function mostrarApp() {
   }
 
   if (currentUser) {
+    if (esUsuarioAdmin()) {
+      sessionStorage.setItem('acceso_docente', '1');
+    }
+
+    const btnMasterQuick = document.getElementById('btn-master-quick-access');
+    if (btnMasterQuick) {
+      btnMasterQuick.style.display = esUsuarioAdmin() ? 'inline-flex' : 'none';
+    }
+
     const headerUserName = document.getElementById('header-username');
     const headerUserGroup = document.getElementById('header-usergroup');
     const profileName = document.getElementById('profile-name');
@@ -2280,11 +2324,11 @@ function mostrarPartidosEnUI(partidos) {
     if (!puedeVer) return;
 
     if (status) {
-      status.textContent = desbloqueado ? 'Módulo desbloqueado' : 'Módulo bloqueado con contraseña';
+      status.textContent = desbloqueado ? 'Módulo docente activo' : 'Módulo bloqueado con contraseña';
     }
 
     if (btn) {
-      btn.textContent = desbloqueado ? 'Módulo desbloqueado' : 'Desbloquear módulo docente';
+      btn.textContent = desbloqueado ? 'Módulo docente activo' : 'Desbloquear módulo docente';
       btn.disabled = desbloqueado;
     }
   }
@@ -2419,6 +2463,11 @@ function registrarEventListenersUI() {
   const btnDocenteUnlock = document.getElementById('btn-docente-unlock');
   if (btnDocenteUnlock) {
     btnDocenteUnlock.addEventListener('click', desbloquearModuloDocente);
+  }
+
+  const btnMasterQuick = document.getElementById('btn-master-quick-access');
+  if (btnMasterQuick) {
+    btnMasterQuick.addEventListener('click', abrirModuloMaestroDesdePrincipal);
   }
 
   const btnLogout = document.getElementById('btn-logout');

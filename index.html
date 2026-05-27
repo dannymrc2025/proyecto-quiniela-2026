@@ -221,8 +221,23 @@
       flex-shrink: 0;
     }
 
+    .btn-master-quick {
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.5);
+      color: var(--blanco);
+      transition: opacity var(--trans), transform var(--trans);
+      white-space: nowrap;
+    }
+    .btn-master-quick:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-master-quick:active { transform: translateY(0); }
+
     @media (max-width: 480px) {
       .user-info { display: none; }
+      .btn-master-quick { padding: 7px 10px; font-size: 0.75rem; }
     }
 
     /* ============================================================
@@ -1603,6 +1618,7 @@
         </div>
         <div class="header-spacer"></div>
         <div class="header-user">
+          <button class="btn-master-quick" id="btn-master-quick-access" style="display:none;">Módulo Maestro</button>
           <div class="user-info">
             <div class="user-name" id="header-username">—</div>
             <div class="user-group" id="header-usergroup">Grupo —</div>
