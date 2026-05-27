@@ -4,7 +4,7 @@
     ".write": false,
     "equipos": {
       ".read": true,
-      ".write": "auth != null && root.child('usuarios').child(auth.uid).child('rol').val() === 'profesor'"
+      ".write": true
     },
     "usuarios": {
       ".read": true,
@@ -38,11 +38,11 @@
     },
     "rankings": {
       ".read": true,
-      ".write": "auth != null && root.child('usuarios').child(auth.uid).child('rol').val() === 'profesor'"
+      ".write": true
     },
     "partidos": {
       ".read": true,
-      ".write": "auth != null && root.child('usuarios').child(auth.uid).child('rol').val() === 'profesor'",
+      ".write": true,
       ".indexOn": ["jornada", "estado", "fecha"]
     },
     "codigos_invitacion": {

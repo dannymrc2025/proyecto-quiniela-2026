@@ -214,6 +214,27 @@ function normalizarFasePartido(fase) {
   return (fase || '').toString().trim().toLowerCase();
 }
 
+const FASES_GRUPO_OFICIAL = new Set([
+  'grupos',
+  'fase de grupos',
+  'fase_de_grupos',
+  'grupos_mundial',
+  'mundial_grupos'
+]);
+
+const FASES_GRUPO_TEST = new Set([
+  'prueba_libertadores',
+  'test_libertadores'
+]);
+
+function esFaseGrupoOficial(fase) {
+  return FASES_GRUPO_OFICIAL.has(normalizarFasePartido(fase));
+}
+
+function esFaseGrupoTest(fase) {
+  return FASES_GRUPO_TEST.has(normalizarFasePartido(fase));
+}
+
 function obtenerPuntajeConducta(equipo) {
   if (!equipo) return 0;
   if (Number.isFinite(Number(equipo.puntaje_conducta))) return Number(equipo.puntaje_conducta);
@@ -358,7 +379,7 @@ function ordenarTablaGrupoConDesempates(tabla, partidosGrupo, catalogoEquipos) {
 async function calcularClasificacionesDeGrupos(opciones = {}) {
   const fasesObjetivo = Array.isArray(opciones.fases) && opciones.fases.length
     ? new Set(opciones.fases.map((fase) => normalizarFasePartido(fase)).filter(Boolean))
-    : new Set(['grupos']);
+    : new Set(FASES_GRUPO_OFICIAL);
   const rutaDestino = opciones.rutaDestino || 'clasificaciones_grupo';
 
   const [partidosSnap, equiposSnap] = await Promise.all([
@@ -754,8 +775,7 @@ function obtenerGanadorEliminatoria(partido, goles1, goles2) {
 }
 
 async function propagarGanadorPartidoEliminatoria(partidoId, partido, goles1, goles2) {
-  const fase = (partido.fase || '').toString().toLowerCase();
-  if (!fase || fase === 'grupos') {
+  if (esFaseGrupoOficial(partido.fase) || esFaseGrupoTest(partido.fase)) {
     return { propagado: false, motivo: 'fase_grupos' };
   }
 
@@ -852,6 +872,16 @@ function esPerfilAdmin(usuario) {
 
 function esUsuarioAdmin() {
   return esPerfilAdmin(currentUser);
+}
+
+function obtenerUsuarioIdSeguro() {
+  const idActual = (currentUser && currentUser.id) ? String(currentUser.id).trim() : '';
+  if (idActual) return idActual;
+
+  const idLocal = (localStorage.getItem('usuarioId') || '').toString().trim();
+  if (idLocal && idLocal !== 'undefined' && idLocal !== 'null') return idLocal;
+
+  return '';
 }
 
 function actualizarVistaAccesoLogin(modo) {
@@ -1477,6 +1507,20 @@ function guardarResultadoModuloMaestro(finalizar = false) {
       }
 
       if (partido.puntos_calculados === true) {
+        if (esFaseGrupoOficial(partido.fase) || esFaseGrupoTest(partido.fase)) {
+          const opcionesTabla = esFaseGrupoTest(partido.fase)
+            ? { fases: Array.from(FASES_GRUPO_TEST), rutaDestino: 'clasificaciones_grupo_test' }
+            : { fases: Array.from(FASES_GRUPO_OFICIAL), rutaDestino: 'clasificaciones_grupo' };
+
+          calcularClasificacionesDeGrupos(opcionesTabla)
+            .then((clasificaciones) => {
+              renderizarClasificacionesDeGrupos(clasificaciones);
+            })
+            .catch(() => {
+              actualizarEstadoMaestroResultados('Partido finalizado, pero no se pudo refrescar la tabla de posiciones.', 'warning');
+            });
+        }
+
         actualizarEstadoMaestroResultados('Partido finalizado. Los puntos ya estaban calculados.', 'warning');
         mostrarNotificacion('warning', '⚠️ Puntos ya calculados anteriormente para este partido');
         cargarPartidosModuloMaestro();
@@ -1488,11 +1532,10 @@ function guardarResultadoModuloMaestro(finalizar = false) {
       db.ref(`partidos/${partidoId}/puntos_calculados`).set(true);
       db.ref(`partidos/${partidoId}/puntos_calculados_timestamp`).set(Date.now());
 
-      const fasePartido = normalizarFasePartido(partido.fase);
-      if (fasePartido === 'grupos' || fasePartido === 'prueba_libertadores') {
-        const opcionesTabla = fasePartido === 'prueba_libertadores'
-          ? { fases: ['prueba_libertadores'], rutaDestino: 'clasificaciones_grupo_test' }
-          : { fases: ['grupos'], rutaDestino: 'clasificaciones_grupo' };
+      if (esFaseGrupoOficial(partido.fase) || esFaseGrupoTest(partido.fase)) {
+        const opcionesTabla = esFaseGrupoTest(partido.fase)
+          ? { fases: Array.from(FASES_GRUPO_TEST), rutaDestino: 'clasificaciones_grupo_test' }
+          : { fases: Array.from(FASES_GRUPO_OFICIAL), rutaDestino: 'clasificaciones_grupo' };
 
         calcularClasificacionesDeGrupos(opcionesTabla)
           .then((clasificaciones) => {
@@ -2162,12 +2205,30 @@ function mostrarRanking(usuarios) {
 }
 
 function hacerPrediccion(usuarioId, partidoId, goles1, goles2) {
+  const usuarioIdNormalizado = (usuarioId || '').toString().trim();
+  const partidoIdNormalizado = (partidoId || '').toString().trim();
+
+  if (!usuarioIdNormalizado) {
+    mostrarNotificacion('error', '❌ Sesión inválida. Vuelve a iniciar sesión.');
+    return;
+  }
+
+  if (!partidoIdNormalizado) {
+    mostrarNotificacion('error', '❌ Partido inválido para guardar predicción');
+    return;
+  }
+
+  if (!Number.isFinite(goles1) || !Number.isFinite(goles2)) {
+    mostrarNotificacion('error', '❌ Ingresa goles válidos');
+    return;
+  }
+
   if (goles1 < 0 || goles1 > 9 || goles2 < 0 || goles2 > 9) {
     mostrarNotificacion('error', '❌ Goles deben estar entre 0 y 9');
     return;
   }
 
-  db.ref(`partidos/${partidoId}`).once('value', (snap) => {
+  db.ref(`partidos/${partidoIdNormalizado}`).once('value', (snap) => {
     if (!snap.exists()) {
       mostrarNotificacion('error', '❌ Partido no encontrado');
       return;
@@ -2195,28 +2256,46 @@ function hacerPrediccion(usuarioId, partidoId, goles1, goles2) {
       cierre_minutos_antes: MINUTOS_CIERRE_PREDICCION
     };
 
-    db.ref(`predicciones/${usuarioId}/${partidoId}`).set(payloadPrediccion, (error) => {
-      if (error) {
+    const predRef = db.ref(`predicciones/${usuarioIdNormalizado}/${partidoIdNormalizado}`);
+
+    predRef.set(payloadPrediccion)
+      .then(() => predRef.once('value'))
+      .then((savedSnap) => {
+        const saved = savedSnap.val() || {};
+        const savedG1 = Number.parseInt(saved.goles1, 10);
+        const savedG2 = Number.parseInt(saved.goles2, 10);
+        const persistio = Number.isFinite(savedG1) && Number.isFinite(savedG2)
+          && savedG1 === goles1 && savedG2 === goles2;
+
+        if (!persistio) {
+          throw new Error('Predicción no persistida correctamente');
+        }
+
+        prediccionesUsuarioActual[partidoIdNormalizado] = payloadPrediccion;
+        mostrarNotificacion('success', '✅ Predicción guardada');
+
+        if (typeof window.closePredictionModal === 'function') {
+          window.closePredictionModal();
+        } else {
+          cerrarModal('modal-prediction');
+        }
+
+        filtroPartidosActivo = 'proximos';
+        cambiarTab('partidos');
+        cargarPartidos();
+        if (typeof window.scrollTo === 'function') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      })
+      .catch((error) => {
+        const msg = String(error && error.message ? error.message : '').toLowerCase();
+        if (msg.includes('permission')) {
+          mostrarNotificacion('error', '❌ Sin permisos para guardar predicción');
+          return;
+        }
+
         mostrarNotificacion('error', '❌ No se pudo guardar la predicción');
-        return;
-      }
-
-      prediccionesUsuarioActual[partidoId] = payloadPrediccion;
-      mostrarNotificacion('success', '✅ Predicción guardada');
-
-      if (typeof window.closePredictionModal === 'function') {
-        window.closePredictionModal();
-      } else {
-        cerrarModal('modal-prediction');
-      }
-
-      filtroPartidosActivo = 'proximos';
-      cambiarTab('partidos');
-      cargarPartidos();
-      if (typeof window.scrollTo === 'function') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    });
+      });
   });
 }
 
@@ -2718,7 +2797,17 @@ function guardarPrediccion() {
     return;
   }
 
-  hacerPrediccion(currentUser.id, partidoId, goles1, goles2);
+  const usuarioId = obtenerUsuarioIdSeguro();
+  if (!usuarioId) {
+    mostrarNotificacion('error', '❌ Sesión inválida. Entra de nuevo con tu código.');
+    return;
+  }
+
+  if (currentUser && !currentUser.id) {
+    currentUser.id = usuarioId;
+  }
+
+  hacerPrediccion(usuarioId, partidoId, goles1, goles2);
 }
 
 function cambiarRanking(tipo) {
