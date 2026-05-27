@@ -2477,9 +2477,19 @@ function mostrarPartidosEnUI(partidos) {
     return;
   }
 
-  const proximos = partidos
-    .filter((p) => !p.estado || p.estado === 'pendiente' || p.estado === 'programado' || p.estado === 'proximo')
-    .slice(0, 20);
+  const partidosProgramados = partidos
+    .filter((p) => !p.estado || p.estado === 'pendiente' || p.estado === 'programado' || p.estado === 'proximo');
+
+  const partidosPrueba = partidosProgramados
+    .filter((p) => (p.fase || '').toString().toLowerCase() === 'prueba_libertadores');
+
+  const partidosNormales = partidosProgramados
+    .filter((p) => (p.fase || '').toString().toLowerCase() !== 'prueba_libertadores');
+
+  // Mantener visibles los partidos de prueba para todos los jugadores,
+  // incluso cuando exista mucho calendario regular.
+  const limiteVisual = Math.max(20, partidosPrueba.length);
+  const proximos = [...partidosPrueba, ...partidosNormales].slice(0, limiteVisual);
 
   if (!proximos.length) {
     contenedor.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>No hay partidos próximos</p></div>';
