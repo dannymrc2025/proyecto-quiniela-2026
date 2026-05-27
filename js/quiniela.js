@@ -2438,6 +2438,26 @@ function mostrarPerfil() {
   actualizarClasificacionesDeGruposModuloMaestro();
 }
 
+function actualizarVisibilidadModuloDocente() {
+  const accesoPanel = document.getElementById('docente-access-panel');
+  const status = document.getElementById('docente-access-status');
+  const btn = document.getElementById('btn-docente-unlock');
+  const puedeVer = esUsuarioAdmin();
+  const desbloqueado = tieneAccesoDocente();
+
+  if (accesoPanel) accesoPanel.style.display = puedeVer ? 'block' : 'none';
+  if (!puedeVer) return;
+
+  if (status) {
+    status.textContent = desbloqueado ? 'Módulo docente activo' : 'Módulo bloqueado con contraseña';
+  }
+
+  if (btn) {
+    btn.textContent = desbloqueado ? 'Módulo docente activo' : 'Desbloquear módulo docente';
+    btn.disabled = desbloqueado;
+  }
+}
+
 function cargarPartidos() {
   db.ref('partidos').once('value', (snapshot) => {
     const partidos = [];
@@ -2449,26 +2469,6 @@ function cargarPartidos() {
   });
 }
 function mostrarPartidosEnUI(partidos) {
-
-  function actualizarVisibilidadModuloDocente() {
-    const accesoPanel = document.getElementById('docente-access-panel');
-    const status = document.getElementById('docente-access-status');
-    const btn = document.getElementById('btn-docente-unlock');
-    const puedeVer = esUsuarioAdmin();
-    const desbloqueado = tieneAccesoDocente();
-
-    if (accesoPanel) accesoPanel.style.display = puedeVer ? 'block' : 'none';
-    if (!puedeVer) return;
-
-    if (status) {
-      status.textContent = desbloqueado ? 'Módulo docente activo' : 'Módulo bloqueado con contraseña';
-    }
-
-    if (btn) {
-      btn.textContent = desbloqueado ? 'Módulo docente activo' : 'Desbloquear módulo docente';
-      btn.disabled = desbloqueado;
-    }
-  }
   const contenedor = document.getElementById('matches-proximos');
   if (!contenedor) return;
 

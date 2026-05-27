@@ -24,6 +24,14 @@
       ".write": true,
       ".indexOn": ["timestamp"]
     },
+    "chat_baneados": {
+      ".read": true,
+      ".write": true
+    },
+    "clasificaciones_grupo": {
+      ".read": true,
+      ".write": true
+    },
     "rankings": {
       ".read": true,
       ".write": "auth != null && root.child('usuarios').child(auth.uid).child('rol').val() === 'profesor'"
