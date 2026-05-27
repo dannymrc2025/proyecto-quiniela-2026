@@ -10,6 +10,9 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+  <link rel="icon" href="data:," />
 
   <link rel="stylesheet" href="css/styles.css" />
 
@@ -1530,7 +1533,7 @@
       <div class="brand">
         <div class="ball">⚽</div>
         <h1>QUINIELA MUNDIAL 2026</h1>
-        <p>Ingresa tu código de invitación para unirte</p>
+        <p>Ingresa tu código de 5 caracteres en mayúscula para unirte</p>
       </div>
 
       <div class="auth-tabs">
@@ -1541,12 +1544,12 @@
       <!-- Panel Login -->
       <div class="auth-panel active" id="panel-login">
         <div class="field-group">
-          <label for="login-code">Código de invitación</label>
-          <input type="text" id="login-code" placeholder="Ej. QUINIELA2026" autocomplete="off" maxlength="30" />
+          <label for="login-code">Código de invitación (5 caracteres)</label>
+          <input type="text" id="login-code" placeholder="Ej. A1B2C" autocomplete="off" maxlength="5" />
         </div>
         <div class="field-group">
-          <label for="login-name">Tu nombre (como te registraste)</label>
-          <input type="text" id="login-name" placeholder="Nombre completo" autocomplete="name" />
+          <label for="login-name">Nombre (solo primera vez, opcional aquí)</label>
+          <input type="text" id="login-name" placeholder="Se usa al registrarte por primera vez" autocomplete="name" />
         </div>
         <button class="btn-primary" id="btn-login">Entrar ➜</button>
         <p class="auth-error" id="login-error"></p>
@@ -1555,9 +1558,9 @@
       <!-- Panel Registro -->
       <div class="auth-panel" id="panel-register">
         <div class="field-group">
-          <label for="reg-invite">Código de invitación *</label>
-          <input type="text" id="reg-invite" placeholder="Solicitado al organizador" autocomplete="off" maxlength="30" />
-          <span class="invite-hint">Solicita el código al organizador de tu grupo</span>
+          <label for="reg-invite">Código de invitación * (5 caracteres)</label>
+          <input type="text" id="reg-invite" placeholder="A1B2C" autocomplete="off" maxlength="5" />
+          <span class="invite-hint">Solicita el código al organizador de tu grupo. Se convierte a mayúsculas automáticamente.</span>
         </div>
         <div class="field-group">
           <label for="reg-name">Nombre completo *</label>
@@ -1940,6 +1943,8 @@
             </div>
           </div>
 
+          <div id="session-audit-note" style="display:none;margin-top:10px;padding:10px 12px;border-radius:8px;background:#FFF7E6;border:1px solid #F2C037;color:#7A5B00;font-weight:600;"></div>
+
           <div class="profile-points-hero">
             <div>
               <div class="hero-label">Puntos totales</div>
@@ -1995,6 +2000,150 @@
             <div class="badge-item"><span class="badge-icon">💎</span><span class="badge-text">100 puntos</span></div>
             <div class="badge-item"><span class="badge-icon">⭐</span><span class="badge-text">Líder femenino</span></div>
           </div>
+        </article>
+
+        <article class="profile-panel" id="docente-access-panel" style="display:none;margin-bottom:16px;">
+          <h3 class="panel-title">Acceso docente</h3>
+          <p style="margin-top:0;color:#666;font-size:0.92rem;">Módulo protegido con contraseña.</p>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <button class="modal-btn primary" id="btn-docente-unlock">Desbloquear módulo docente</button>
+            <span id="docente-access-status" style="font-weight:700;color:#7A5B00;">Módulo bloqueado con contraseña</span>
+          </div>
+        </article>
+
+        <article class="profile-panel" id="doc-session-audit-panel" style="display:none;margin-bottom:16px;">
+          <h3 class="panel-title">Auditoría de accesos (Docente)</h3>
+          <div class="history-table-wrap">
+            <table class="history-table" id="doc-session-audit-table">
+              <thead>
+                <tr>
+                  <th>Alumno</th>
+                  <th>Grupo</th>
+                  <th>Método</th>
+                  <th>Último acceso</th>
+                  <th>Código</th>
+                </tr>
+              </thead>
+              <tbody id="doc-session-audit-tbody">
+                <tr><td colspan="5" style="text-align:center;padding:16px;color:#666;">Cargando accesos…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="profile-panel" id="admin-master-panel" style="display:none;margin-bottom:16px;">
+          <h3 class="panel-title">Módulo Maestro de Resultados</h3>
+          <p style="margin-top:0;color:#666;font-size:0.92rem;">Selecciona un partido, captura el marcador y finaliza para calcular puntos.</p>
+
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;align-items:end;">
+            <div>
+              <label for="admin-master-match-select" style="display:block;font-weight:700;margin-bottom:6px;color:#474A4A;">Partido</label>
+              <select id="admin-master-match-select" style="width:100%;padding:10px;border:1px solid #D1D4D1;border-radius:8px;background:#fff;">
+                <option value="">Selecciona partido</option>
+              </select>
+            </div>
+            <div>
+              <label for="admin-master-goles1" style="display:block;font-weight:700;margin-bottom:6px;color:#474A4A;">Goles equipo 1</label>
+              <input id="admin-master-goles1" type="number" min="0" step="1" style="width:100%;padding:10px;border:1px solid #D1D4D1;border-radius:8px;" />
+            </div>
+            <div>
+              <label for="admin-master-goles2" style="display:block;font-weight:700;margin-bottom:6px;color:#474A4A;">Goles equipo 2</label>
+              <input id="admin-master-goles2" type="number" min="0" step="1" style="width:100%;padding:10px;border:1px solid #D1D4D1;border-radius:8px;" />
+            </div>
+          </div>
+
+          <div id="admin-master-summary" style="margin-top:10px;color:#474A4A;font-weight:600;">Selecciona un partido para cargar sus datos.</div>
+          <div id="admin-master-status" style="margin-top:6px;color:#2A398D;font-weight:700;">Esperando selección de partido.</div>
+
+          <div class="modal-actions-row" style="margin-top:12px;">
+            <button class="modal-btn" id="admin-master-load">Cargar partido</button>
+            <button class="modal-btn" id="admin-master-save">Guardar marcador</button>
+            <button class="modal-btn primary" id="admin-master-finalize">Finalizar y puntuar</button>
+          </div>
+
+          <hr style="margin:18px 0;border:none;border-top:1px solid #E2E5E2;">
+
+          <h3 class="panel-title" style="margin-bottom:10px;">Cargar fixture de 16vos por URL</h3>
+          <p style="margin-top:0;color:#666;font-size:0.92rem;">Pega el enlace de un JSON público (ejemplo: raw.githubusercontent...) con los partidos de dieciseisavos.</p>
+          <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;">
+            <div>
+              <label for="admin-master-fixture-url" style="display:block;font-weight:700;margin-bottom:6px;color:#474A4A;">URL del fixture</label>
+              <input id="admin-master-fixture-url" type="url" placeholder="https://.../fixture-dieciseisavos.json" style="width:100%;padding:10px;border:1px solid #D1D4D1;border-radius:8px;" />
+            </div>
+            <button class="modal-btn" id="admin-master-import-fixture">Cargar fixture</button>
+          </div>
+          <div class="modal-actions-row" style="margin-top:8px;">
+            <button class="modal-btn" id="admin-master-load-libertadores-test">Cargar prueba Libertadores (mañana)</button>
+          </div>
+          <div id="admin-master-fixture-status" style="margin-top:6px;color:#2A398D;font-weight:700;">Esperando URL de fixture.</div>
+
+          <hr style="margin:18px 0;border:none;border-top:1px solid #E2E5E2;">
+
+          <h3 class="panel-title" style="margin-bottom:10px;">Añadir jugador</h3>
+          <p style="margin-top:0;color:#666;font-size:0.92rem;">El alumno nuevo recibe un código de 5 caracteres y aquí sí puede asignarse Sin Grupo.</p>
+
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;align-items:end;">
+            <div>
+              <label for="admin-master-player-name" style="display:block;font-weight:700;margin-bottom:6px;color:#474A4A;">Nombre</label>
+              <input id="admin-master-player-name" type="text" placeholder="Nombre completo" style="width:100%;padding:10px;border:1px solid #D1D4D1;border-radius:8px;" />
+            </div>
+            <div>
+              <label for="admin-master-player-group" style="display:block;font-weight:700;margin-bottom:6px;color:#474A4A;">Grupo</label>
+              <select id="admin-master-player-group" style="width:100%;padding:10px;border:1px solid #D1D4D1;border-radius:8px;background:#fff;">
+                <option value="">Selecciona</option>
+                <option value="2A">Grupo 2A</option>
+                <option value="2C">Grupo 2C</option>
+                <option value="2D">Grupo 2D</option>
+                <option value="2F">Grupo 2F</option>
+                <option value="Sin Grupo">Sin Grupo</option>
+              </select>
+            </div>
+            <div>
+              <label for="admin-master-player-sex" style="display:block;font-weight:700;margin-bottom:6px;color:#474A4A;">Sexo</label>
+              <select id="admin-master-player-sex" style="width:100%;padding:10px;border:1px solid #D1D4D1;border-radius:8px;background:#fff;">
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;margin-top:10px;">
+            <div>
+              <label for="admin-master-player-code" style="display:block;font-weight:700;margin-bottom:6px;color:#474A4A;">Código nuevo (se genera al guardar)</label>
+              <input id="admin-master-player-code" type="text" readonly placeholder="Se generará automáticamente" style="width:100%;padding:10px;border:1px solid #D1D4D1;border-radius:8px;background:#F5F5F5;" />
+            </div>
+            <button class="modal-btn" id="admin-master-generate-code">Generar código</button>
+          </div>
+
+          <div id="admin-master-player-status" style="margin-top:6px;color:#2A398D;font-weight:700;">Genera un código para el nuevo jugador.</div>
+
+          <div class="modal-actions-row" style="margin-top:12px;">
+            <button class="modal-btn primary" id="admin-master-add-player">Agregar jugador</button>
+          </div>
+
+          <hr style="margin:18px 0;border:none;border-top:1px solid #E2E5E2;">
+
+          <h3 class="panel-title" style="margin-bottom:10px;">Jugadores por grupo</h3>
+          <p style="margin-top:0;color:#666;font-size:0.92rem;">Vista rápida del listado completo para control docente.</p>
+          <div id="admin-master-players-by-group" style="display:grid;gap:12px;"></div>
+
+          <hr style="margin:18px 0;border:none;border-top:1px solid #E2E5E2;">
+
+          <h3 class="panel-title" style="margin-bottom:10px;">Baneos de chat</h3>
+          <p style="margin-top:0;color:#666;font-size:0.92rem;">Desde aquí puedes revisar y levantar baneos activos del chat.</p>
+          <div id="admin-master-chat-ban-status" style="margin-top:6px;color:#2A398D;font-weight:700;">Sin baneos activos.</div>
+          <div id="admin-master-chat-bans" style="display:grid;gap:10px;margin-top:10px;"></div>
+
+          <hr style="margin:18px 0;border:none;border-top:1px solid #E2E5E2;">
+
+          <h3 class="panel-title" style="margin-bottom:10px;">Clasificación oficial por grupos</h3>
+          <p style="margin-top:0;color:#666;font-size:0.92rem;">Desempate: enfrentamientos directos, diferencia, goles, fair play y ranking FIFA.</p>
+          <div class="modal-actions-row" style="margin-top:8px;">
+            <button class="modal-btn" id="admin-master-refresh-groups">Actualizar clasificación de grupos</button>
+            <button class="modal-btn" id="admin-master-generate-knockout">Generar cruces de dieciseisavos</button>
+          </div>
+          <div id="admin-master-group-status" style="margin-top:6px;color:#2A398D;font-weight:700;">Pendiente de cálculo.</div>
+          <div id="admin-master-group-standings" style="display:grid;gap:12px;margin-top:10px;"></div>
         </article>
 
         <section class="profile-history">
@@ -2082,6 +2231,7 @@
           <div class="name" id="pred-name-b">—</div>
         </div>
       </div>
+      <div id="pred-close-note" style="margin-top:10px;font-size:0.9rem;color:#7A5B00;font-weight:700;">⏰ Cierre de predicción en horario Cancún.</div>
       <div class="modal-actions">
         <button class="btn-cancel" id="btn-pred-cancel">Cancelar</button>
         <button class="btn-primary" id="btn-pred-save" style="flex:1;">Guardar predicción</button>
@@ -2099,17 +2249,17 @@
   ============================================================ -->
   <div class="app-modal-overlay dark-80" id="modal-login">
     <div class="app-modal">
-      <h2>Registro de usuario</h2>
-      <p class="modal-subtitle">Completa tus datos para unirte a la Quiniela Mundial 2026.</p>
+      <h2>Iniciar sesión / Registro</h2>
+      <p class="modal-subtitle">Si ya te registraste: entra solo con tu código de 5 caracteres. Si es tu primera vez: completa también nombre, grupo y sexo.</p>
 
       <div class="modal-form-grid">
         <div class="modal-field full">
-          <label for="modal-login-code">Código invitación</label>
-          <input id="modal-login-code" type="text" placeholder="Ej. QUINIELA2026" maxlength="30" />
+          <label for="modal-login-code">Código invitación (5 caracteres)</label>
+          <input id="modal-login-code" type="text" placeholder="Ej. A1B2C" maxlength="5" />
         </div>
 
         <div class="modal-field full">
-          <label for="modal-login-name">Nombre completo</label>
+          <label for="modal-login-name">Nombre completo (solo primera vez)</label>
           <input id="modal-login-name" type="text" placeholder="Nombre y apellidos" />
         </div>
 
@@ -2133,10 +2283,10 @@
         </div>
       </div>
 
-      <div class="modal-error" id="modal-login-error">Código inválido. Verifica e intenta de nuevo.</div>
+      <div class="modal-error" id="modal-login-error"></div>
 
       <div class="modal-actions-row">
-        <button class="modal-btn primary" id="btn-modal-registrarme">REGISTRARME</button>
+        <button class="modal-btn primary" id="btn-modal-registrarme">ENTRAR / REGISTRARME</button>
       </div>
     </div>
   </div>
@@ -2548,6 +2698,8 @@
     ------------------------------------------------------- */
     const modalPred    = document.getElementById('modal-prediction');
     const btnPredCancel = document.getElementById('btn-pred-cancel');
+    const predCloseNote = document.getElementById('pred-close-note');
+    const btnPredSave = document.getElementById('btn-pred-save');
 
     function openPredictionModal(matchData) {
       if (!modalPred) return;
@@ -2559,12 +2711,28 @@
         document.getElementById('pred-score-a').value = matchData.predA ?? 0;
         document.getElementById('pred-score-b').value = matchData.predB ?? 0;
         modalPred.dataset.matchId = matchData.id || '';
+
+        if (predCloseNote) {
+          predCloseNote.textContent = `⏰ ${matchData.closeText || 'Cierre de predicción en horario Cancún.'}`;
+          predCloseNote.style.color = matchData.isClosed ? '#E61D25' : '#7A5B00';
+        }
+
+        if (btnPredSave) {
+          btnPredSave.disabled = !!matchData.isClosed;
+          btnPredSave.style.opacity = matchData.isClosed ? '0.6' : '1';
+          btnPredSave.title = matchData.isClosed ? 'Predicción cerrada (15 minutos antes)' : '';
+        }
       }
       modalPred.classList.add('open');
     }
 
     function closePredictionModal() {
       if (modalPred) modalPred.classList.remove('open');
+      if (btnPredSave) {
+        btnPredSave.disabled = false;
+        btnPredSave.style.opacity = '1';
+        btnPredSave.title = '';
+      }
     }
 
     if (btnPredCancel) btnPredCancel.addEventListener('click', closePredictionModal);
@@ -2813,7 +2981,7 @@
   <!-- ============================================================
        APP JS
   ============================================================ -->
-  <script src="js/quiniela.js"></script>
+  <script src="js/quiniela.js?v=20260526-1"></script>
 
 </body>
 </html>
