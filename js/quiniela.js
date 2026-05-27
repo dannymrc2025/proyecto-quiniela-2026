@@ -237,6 +237,60 @@ async function actualizarNodoConFallback(ruta, payload) {
   }
 }
 
+function construirEndpointFirebase(ruta) {
+  const base = (firebaseConfig.databaseURL || '').replace(/\/+$/, '');
+  const path = String(ruta || '').replace(/^\/+/, '');
+  return `${base}/${path}.json`;
+}
+
+async function establecerNodoConFallback(ruta, payload) {
+  try {
+    await db.ref(ruta).set(payload);
+    return { via: 'sdk' };
+  } catch (error) {
+    const endpoint = construirEndpointFirebase(ruta);
+    const response = await fetch(endpoint, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw error;
+    }
+
+    return { via: 'rest' };
+  }
+}
+
+async function leerNodoRemoto(ruta) {
+  const endpoint = construirEndpointFirebase(ruta);
+  const response = await fetch(endpoint, { cache: 'no-store' });
+  if (!response.ok) return null;
+  return response.json();
+}
+
+function pausa(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function confirmarPrediccionRemota(usuarioId, partidoId, goles1, goles2) {
+  const ruta = `predicciones/${usuarioId}/${partidoId}`;
+
+  for (let intento = 0; intento < 3; intento += 1) {
+    const remota = await leerNodoRemoto(ruta);
+    const savedG1 = Number.parseInt(remota && remota.goles1, 10);
+    const savedG2 = Number.parseInt(remota && remota.goles2, 10);
+    const ok = Number.isFinite(savedG1) && Number.isFinite(savedG2)
+      && savedG1 === goles1 && savedG2 === goles2;
+
+    if (ok) return true;
+    await pausa(500);
+  }
+
+  return false;
+}
+
 const FASES_GRUPO_OFICIAL = new Set([
   'grupos',
   'fase de grupos',
@@ -2290,19 +2344,13 @@ function hacerPrediccion(usuarioId, partidoId, goles1, goles2) {
       cierre_minutos_antes: MINUTOS_CIERRE_PREDICCION
     };
 
-    const predRef = db.ref(`predicciones/${usuarioIdNormalizado}/${partidoIdNormalizado}`);
+    const rutaPrediccion = `predicciones/${usuarioIdNormalizado}/${partidoIdNormalizado}`;
 
-    predRef.set(payloadPrediccion)
-      .then(() => predRef.once('value'))
-      .then((savedSnap) => {
-        const saved = savedSnap.val() || {};
-        const savedG1 = Number.parseInt(saved.goles1, 10);
-        const savedG2 = Number.parseInt(saved.goles2, 10);
-        const persistio = Number.isFinite(savedG1) && Number.isFinite(savedG2)
-          && savedG1 === goles1 && savedG2 === goles2;
-
+    establecerNodoConFallback(rutaPrediccion, payloadPrediccion)
+      .then(() => confirmarPrediccionRemota(usuarioIdNormalizado, partidoIdNormalizado, goles1, goles2))
+      .then((persistio) => {
         if (!persistio) {
-          throw new Error('Predicción no persistida correctamente');
+          throw new Error('No se pudo confirmar la predicción en servidor');
         }
 
         prediccionesUsuarioActual[partidoIdNormalizado] = payloadPrediccion;
@@ -2328,7 +2376,7 @@ function hacerPrediccion(usuarioId, partidoId, goles1, goles2) {
           return;
         }
 
-        mostrarNotificacion('error', '❌ No se pudo guardar la predicción');
+        mostrarNotificacion('error', '❌ No se pudo confirmar el guardado. Revisa conexión y vuelve a intentar.');
       });
   });
 }
