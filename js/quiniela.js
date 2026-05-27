@@ -137,12 +137,17 @@ function obtenerCierrePrediccionMs(partido) {
 }
 
 function estaCerradaPrediccion(partido) {
+  if (esFaseGrupoTest(partido ? partido.fase : '')) return false;
   const cierre = obtenerCierrePrediccionMs(partido);
   if (!cierre) return false;
   return Date.now() >= cierre;
 }
 
 function obtenerTextoCierrePrediccion(partido) {
+  if (esFaseGrupoTest(partido ? partido.fase : '')) {
+    return 'Prueba activa: sin cierre de predicción';
+  }
+
   const cierre = obtenerCierrePrediccionMs(partido);
   if (!cierre) return 'Cierre no disponible';
   const fechaHora = new Date(cierre).toLocaleString('es-MX', {
