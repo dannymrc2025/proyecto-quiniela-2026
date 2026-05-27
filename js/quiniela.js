@@ -1417,6 +1417,96 @@ function iniciarSesionExistente(codigo, nombre) {
   iniciarSesionSoloConCodigo(codigo);
 }
 
+function recuperarSesionConCodigoUsado(codigoNormalizado, loginError) {
+  db.ref(`codigos_invitacion/${codigoNormalizado}`).once('value', (snap) => {
+    if (!snap.exists()) {
+      if (loginError) loginError.textContent = 'Código inválido. Verifica e intenta de nuevo.';
+      mostrarNotificacion('error', '❌ Código inválido');
+      return;
+    }
+
+    const codigoData = snap.val() || {};
+    if (codigoData.usado !== true) {
+      if (loginError) loginError.textContent = 'Este código aún no tiene una cuenta registrada.';
+      mostrarNotificacion('error', '❌ Código sin usuario registrado');
+      return;
+    }
+
+    if (codigoData.usuario_id) {
+      iniciarSesionSoloConCodigo(codigoNormalizado);
+      return;
+    }
+
+    // Fallback: recover link if code is marked used but usuario_id is missing.
+    db.ref('usuarios')
+      .orderByChild('codigo_invitacion')
+      .equalTo(codigoNormalizado)
+      .limitToFirst(1)
+      .once('value', (userSnap) => {
+        if (!userSnap.exists()) {
+          if (loginError) loginError.textContent = 'Código usado sin usuario asociado. Contacta al docente.';
+          mostrarNotificacion('error', '❌ Código usado sin usuario asociado');
+          return;
+        }
+
+        const [usuarioId] = Object.keys(userSnap.val() || {});
+        if (!usuarioId) {
+          if (loginError) loginError.textContent = 'No se pudo recuperar la sesión con este código.';
+          mostrarNotificacion('error', '❌ No se pudo recuperar la sesión');
+          return;
+        }
+
+        db.ref(`codigos_invitacion/${codigoNormalizado}/usuario_id`).set(usuarioId, (err) => {
+          if (err) {
+            if (loginError) loginError.textContent = 'No se pudo reparar el vínculo del código.';
+            mostrarNotificacion('error', '❌ Error al reparar código');
+            return;
+          }
+
+          iniciarSesionSoloConCodigo(codigoNormalizado);
+        });
+      });
+  });
+}
+
+function procesarEntradaLoginRegistro(codigo, nombre, grupo, sexoRaw) {
+  const loginError = document.getElementById('modal-login-error');
+  const codigoNormalizado = normalizarCodigoInvitacion(codigo);
+  const grupoLimpio = (grupo || '').toString().trim();
+
+  if (!esCodigoValido(codigoNormalizado)) {
+    if (loginError) loginError.textContent = 'El código debe tener 5 caracteres en mayúscula.';
+    mostrarNotificacion('error', '❌ Código inválido');
+    return;
+  }
+
+  db.ref(`codigos_invitacion/${codigoNormalizado}`).once('value', (snap) => {
+    if (!snap.exists()) {
+      if (loginError) loginError.textContent = 'Código inválido. Verifica e intenta de nuevo.';
+      mostrarNotificacion('error', '❌ Código inválido');
+      return;
+    }
+
+    const codigoData = snap.val() || {};
+    const codigoMarcadoComoUsado = codigoData.usado === true;
+
+    // If the code is already used, always recover session first.
+    if (codigoMarcadoComoUsado) {
+      recuperarSesionConCodigoUsado(codigoNormalizado, loginError);
+      return;
+    }
+
+    if (!grupoLimpio) {
+      if (loginError) loginError.textContent = 'Selecciona grupo para registro nuevo.';
+      mostrarNotificacion('warning', '⚠️ Para registro nuevo debes seleccionar grupo');
+      return;
+    }
+
+    const sexo = sexoRaw === 'F' ? 'femenino' : 'masculino';
+    registrarUsuario(codigoNormalizado, nombre, grupoLimpio, sexo);
+  });
+}
+
 function iniciarSesionSoloConCodigo(codigo) {
   const loginError = document.getElementById('modal-login-error');
   const codigoNormalizado = normalizarCodigoInvitacion(codigo);
@@ -1434,10 +1524,15 @@ function iniciarSesionSoloConCodigo(codigo) {
       return;
     }
 
-    const codigoData = snap.val();
-    if (codigoData.usado !== true || !codigoData.usuario_id) {
+    const codigoData = snap.val() || {};
+    if (codigoData.usado !== true) {
       if (loginError) loginError.textContent = 'Este código aún no tiene una cuenta registrada.';
       mostrarNotificacion('error', '❌ Código sin usuario registrado');
+      return;
+    }
+
+    if (!codigoData.usuario_id) {
+      recuperarSesionConCodigoUsado(codigoNormalizado, loginError);
       return;
     }
 
@@ -1488,10 +1583,9 @@ function registrarUsuario(codigo, nombre, grupo, sexo) {
       return;
     }
 
-    const codigoData = snap.val();
+    const codigoData = snap.val() || {};
     if (codigoData.usado === true) {
-      if (loginError) loginError.textContent = 'Código ya fue usado.';
-      mostrarNotificacion('error', '❌ Código ya fue usado');
+      recuperarSesionConCodigoUsado(codigoNormalizado, loginError);
       return;
     }
 
@@ -2306,13 +2400,7 @@ function registrarEventListenersUI() {
       const nombre = document.getElementById('modal-login-name')?.value?.trim() || '';
       const grupo = document.getElementById('modal-login-group')?.value || '';
       const sexoRaw = document.getElementById('modal-login-sex')?.value || '';
-      const sexo = grupo ? (sexoRaw === 'F' ? 'femenino' : 'masculino') : '';
-
-      if (grupo) {
-        registrarUsuario(codigo, nombre, grupo, sexo);
-      } else {
-        iniciarSesionSoloConCodigo(codigo);
-      }
+      procesarEntradaLoginRegistro(codigo, nombre, grupo, sexoRaw);
     });
   }
 
