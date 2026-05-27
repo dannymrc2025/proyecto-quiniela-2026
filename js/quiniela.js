@@ -17,6 +17,7 @@ const db = firebase.database();
 let currentUser = null;
 let listenersRegistrados = false;
 let modoAccesoLogin = 'menu';
+let filtroPartidosActivo = 'proximos';
 const CLAVE_DOCENTE = '2707';
 const HUSO_CANCUN = '-05:00';
 const MINUTOS_CIERRE_PREDICCION = 15;
@@ -1578,12 +1579,13 @@ async function agregarJugadorModuloMaestro() {
       });
     }
 
-    await new Promise((resolve) => {
-      registrarUsuario(codigo, nombre, grupo, sexo);
-      setTimeout(resolve, 1200);
-    });
+    const creado = await registrarUsuario(codigo, nombre, grupo, sexo, { iniciarSesion: false });
+    if (!creado) {
+      throw new Error('No se pudo crear el jugador');
+    }
 
     if (status) status.textContent = `Jugador agregado con código ${codigo}`;
+    mostrarNotificacion('success', `✅ Jugador creado: ${nombre} (${codigo})`);
     actualizarListaJugadoresPorGrupoModuloMaestro();
   } catch (error) {
     if (status) status.textContent = 'No se pudo agregar el jugador.';
@@ -1752,7 +1754,8 @@ function iniciarSesionSoloConCodigo(codigo) {
   });
 }
 
-function registrarUsuario(codigo, nombre, grupo, sexo) {
+function registrarUsuario(codigo, nombre, grupo, sexo, opciones = {}) {
+  const iniciarSesion = opciones.iniciarSesion !== false;
   const loginError = document.getElementById('modal-login-error');
   if (loginError) loginError.textContent = '';
 
@@ -1762,65 +1765,84 @@ function registrarUsuario(codigo, nombre, grupo, sexo) {
   if (!esCodigoValido(codigoNormalizado)) {
     if (loginError) loginError.textContent = 'El código debe tener 5 caracteres en mayúscula.';
     mostrarNotificacion('error', '❌ Código inválido');
-    return;
+    return Promise.resolve(false);
   }
 
   if (!nombre || !grupo || !sexo) {
     if (loginError) loginError.textContent = 'Todos los campos son obligatorios.';
     mostrarNotificacion('error', '❌ Todos los campos son obligatorios');
-    return;
+    return Promise.resolve(false);
   }
 
-  // Validar codigo en Firebase
-  db.ref(`codigos_invitacion/${codigoNormalizado}`).once('value', (snap) => {
-    if (!snap.exists()) {
-      if (loginError) loginError.textContent = 'Código inválido. Verifica e intenta de nuevo.';
-      mostrarNotificacion('error', '❌ Código inválido');
-      return;
-    }
-
-    const codigoData = snap.val() || {};
-    if (codigoData.usado === true) {
-      recuperarSesionConCodigoUsado(codigoNormalizado, loginError);
-      return;
-    }
-
-    // Crear usuario nuevo
-    const usuarioId = 'usuario_' + Date.now();
-    const usuarioData = {
-      id: usuarioId,
-      nombre: nombreNormalizado,
-      grupo: grupo,
-      sexo: sexo,
-      rol: 'alumno',
-      codigo_invitacion: codigoNormalizado,
-      fecha_registro: Date.now(),
-      estadisticas: {
-        puntos_totales: 0,
-        aciertos_5pts: 0,
-        aciertos_3pts: 0,
-        aciertos_1pt: 0,
-        fallos: 0,
-        partidos_predichos: 0,
-        porcentaje_aciertos: 0,
-        badges: [],
-        racha_actual: 0,
-        racha_maxima: 0,
-        mensajes_chat: 0
+  return new Promise((resolve) => {
+    // Validar codigo en Firebase
+    db.ref(`codigos_invitacion/${codigoNormalizado}`).once('value', (snap) => {
+      if (!snap.exists()) {
+        if (loginError) loginError.textContent = 'Código inválido. Verifica e intenta de nuevo.';
+        mostrarNotificacion('error', '❌ Código inválido');
+        resolve(false);
+        return;
       }
-    };
 
-    db.ref(`usuarios/${usuarioId}`).set(usuarioData);
-    db.ref(`codigos_invitacion/${codigoNormalizado}/usado`).set(true);
-    db.ref(`codigos_invitacion/${codigoNormalizado}/usuario_id`).set(usuarioId);
+      const codigoData = snap.val() || {};
+      if (codigoData.usado === true) {
+        if (iniciarSesion) {
+          recuperarSesionConCodigoUsado(codigoNormalizado, loginError);
+        } else {
+          if (loginError) loginError.textContent = 'El código ya fue utilizado por otro usuario.';
+          mostrarNotificacion('error', '❌ Código ya utilizado');
+        }
+        resolve(false);
+        return;
+      }
 
-    localStorage.setItem('usuarioId', usuarioId);
-    currentUser = usuarioData;
-    registrarEventoSesion(usuarioId, 'registro_inicial', codigoNormalizado);
+      // Crear usuario nuevo
+      const usuarioId = 'usuario_' + Date.now();
+      const usuarioData = {
+        id: usuarioId,
+        nombre: nombreNormalizado,
+        grupo: grupo,
+        sexo: sexo,
+        rol: 'alumno',
+        codigo_invitacion: codigoNormalizado,
+        fecha_registro: Date.now(),
+        estadisticas: {
+          puntos_totales: 0,
+          aciertos_5pts: 0,
+          aciertos_3pts: 0,
+          aciertos_1pt: 0,
+          fallos: 0,
+          partidos_predichos: 0,
+          porcentaje_aciertos: 0,
+          badges: [],
+          racha_actual: 0,
+          racha_maxima: 0,
+          mensajes_chat: 0
+        }
+      };
 
-    mostrarNotificacion('success', '✅ ¡Bienvenido! Registro completado');
-    document.getElementById('modal-login').style.display = 'none';
-    mostrarApp();
+      Promise.all([
+        db.ref(`usuarios/${usuarioId}`).set(usuarioData),
+        db.ref(`codigos_invitacion/${codigoNormalizado}/usado`).set(true),
+        db.ref(`codigos_invitacion/${codigoNormalizado}/usuario_id`).set(usuarioId)
+      ])
+        .then(() => {
+          if (iniciarSesion) {
+            localStorage.setItem('usuarioId', usuarioId);
+            currentUser = usuarioData;
+            registrarEventoSesion(usuarioId, 'registro_inicial', codigoNormalizado);
+
+            mostrarNotificacion('success', '✅ ¡Bienvenido! Registro completado');
+            document.getElementById('modal-login').style.display = 'none';
+            mostrarApp();
+          }
+          resolve(true);
+        })
+        .catch(() => {
+          mostrarNotificacion('error', '❌ No se pudo completar el registro');
+          resolve(false);
+        });
+    });
   });
 }
 
@@ -2492,17 +2514,49 @@ function cargarPartidos() {
     actualizarVisibilidadModuloDocente();
   });
 }
+
+function actualizarFiltroPartidosUI() {
+  const contenedorProximos = document.getElementById('matches-proximos');
+  const contenedorJugados = document.getElementById('matches-jugados');
+  const botones = document.querySelectorAll('.filter-btn[data-filter]');
+
+  const mostrandoJugados = filtroPartidosActivo === 'jugados';
+
+  if (contenedorProximos) contenedorProximos.style.display = mostrandoJugados ? 'none' : 'flex';
+  if (contenedorJugados) contenedorJugados.style.display = mostrandoJugados ? 'flex' : 'none';
+
+  botones.forEach((btn) => {
+    const activo = btn.getAttribute('data-filter') === filtroPartidosActivo;
+    btn.classList.toggle('active', activo);
+  });
+}
+
 function mostrarPartidosEnUI(partidos) {
-  const contenedor = document.getElementById('matches-proximos');
-  if (!contenedor) return;
+  const contenedorProximos = document.getElementById('matches-proximos');
+  const contenedorJugados = document.getElementById('matches-jugados');
+  if (!contenedorProximos || !contenedorJugados) return;
 
   if (!Array.isArray(partidos) || !partidos.length) {
-    contenedor.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>No hay partidos disponibles</p></div>';
+    contenedorProximos.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>No hay partidos disponibles</p></div>';
+    contenedorJugados.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>No hay resultados todavía</p></div>';
+    actualizarFiltroPartidosUI();
     return;
   }
 
   const partidosProgramados = partidos
     .filter((p) => !p.estado || p.estado === 'pendiente' || p.estado === 'programado' || p.estado === 'proximo');
+
+  const partidosJugados = partidos
+    .filter((p) => {
+      const resultado = obtenerResultadoPartido(p);
+      const tieneMarcador = resultado.goles1 !== null && resultado.goles2 !== null;
+      return p.estado === 'finalizado' || tieneMarcador;
+    })
+    .sort((a, b) => {
+      const fechaA = `${a.fecha || ''} ${a.hora || ''}`.trim();
+      const fechaB = `${b.fecha || ''} ${b.hora || ''}`.trim();
+      return fechaB.localeCompare(fechaA, 'es');
+    });
 
   const partidosPrueba = partidosProgramados
     .filter((p) => (p.fase || '').toString().toLowerCase() === 'prueba_libertadores');
@@ -2516,37 +2570,68 @@ function mostrarPartidosEnUI(partidos) {
   const proximos = [...partidosPrueba, ...partidosNormales].slice(0, limiteVisual);
 
   if (!proximos.length) {
-    contenedor.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>No hay partidos próximos</p></div>';
-    return;
+    contenedorProximos.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>No hay partidos próximos</p></div>';
+  } else {
+    contenedorProximos.innerHTML = proximos.map((p) => `
+      <article class="match-card" data-match-id="${p.id}">
+        <div class="match-card-header">
+          <span class="match-group">${p.fase || 'Fase de grupos'}${p.grupo ? ` · Grupo ${p.grupo}` : ''}</span>
+          <span class="match-datetime">📅 ${p.fecha || 'Por definir'} · ${p.hora || '--:--'}</span>
+        </div>
+        <div class="match-card-body">
+          <div class="match-team">
+            <span class="team-flag">${p.bandera1 || '🏳️'}</span>
+            <span class="team-name">${p.pais1 || 'Equipo 1'}</span>
+          </div>
+          <div class="match-vs">
+            <span class="vs-text">VS</span>
+            <span class="match-result pending">· · ·</span>
+          </div>
+          <div class="match-team">
+            <span class="team-flag">${p.bandera2 || '🏳️'}</span>
+            <span class="team-name">${p.pais2 || 'Equipo 2'}</span>
+          </div>
+        </div>
+        <div class="match-card-footer">
+          <span class="my-prediction no-pred">Sin predicción aún</span>
+          <button class="btn-predict" onclick="abrirModalPrediccion({id:'${escaparJsString(p.id)}', flagA:'${escaparJsString(p.bandera1 || '🏳️')}', teamA:'${escaparJsString(p.pais1 || 'Equipo 1')}', flagB:'${escaparJsString(p.bandera2 || '🏳️')}', teamB:'${escaparJsString(p.pais2 || 'Equipo 2')}', closeText:'${escaparJsString(obtenerTextoCierrePrediccion(p))}', isClosed:${estaCerradaPrediccion(p)}})">✏️ Hacer predicción</button>
+        </div>
+        <div style="font-size:0.8rem;color:#666;margin-top:6px;padding:0 4px;">⏰ ${escaparHtml(obtenerTextoCierrePrediccion(p))}</div>
+      </article>
+    `).join('');
   }
 
-  contenedor.innerHTML = proximos.map((p) => `
-    <article class="match-card" data-match-id="${p.id}">
-      <div class="match-card-header">
-        <span class="match-group">${p.fase || 'Fase de grupos'}${p.grupo ? ` · Grupo ${p.grupo}` : ''}</span>
-        <span class="match-datetime">📅 ${p.fecha || 'Por definir'} · ${p.hora || '--:--'}</span>
-      </div>
-      <div class="match-card-body">
-        <div class="match-team">
-          <span class="team-flag">${p.bandera1 || '🏳️'}</span>
-          <span class="team-name">${p.pais1 || 'Equipo 1'}</span>
-        </div>
-        <div class="match-vs">
-          <span class="vs-text">VS</span>
-          <span class="match-result pending">· · ·</span>
-        </div>
-        <div class="match-team">
-          <span class="team-flag">${p.bandera2 || '🏳️'}</span>
-          <span class="team-name">${p.pais2 || 'Equipo 2'}</span>
-        </div>
-      </div>
-      <div class="match-card-footer">
-        <span class="my-prediction no-pred">Sin predicción aún</span>
-        <button class="btn-predict" onclick="abrirModalPrediccion({id:'${escaparJsString(p.id)}', flagA:'${escaparJsString(p.bandera1 || '🏳️')}', teamA:'${escaparJsString(p.pais1 || 'Equipo 1')}', flagB:'${escaparJsString(p.bandera2 || '🏳️')}', teamB:'${escaparJsString(p.pais2 || 'Equipo 2')}', closeText:'${escaparJsString(obtenerTextoCierrePrediccion(p))}', isClosed:${estaCerradaPrediccion(p)}})">✏️ Hacer predicción</button>
-      </div>
-      <div style="font-size:0.8rem;color:#666;margin-top:6px;padding:0 4px;">⏰ ${escaparHtml(obtenerTextoCierrePrediccion(p))}</div>
-    </article>
-  `).join('');
+  if (!partidosJugados.length) {
+    contenedorJugados.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><p>Aún no hay partidos jugados con resultado.</p></div>';
+  } else {
+    contenedorJugados.innerHTML = partidosJugados.map((p) => {
+      const resultado = obtenerResultadoPartido(p);
+      return `
+        <article class="match-card jugado" data-match-id="${p.id}">
+          <div class="match-card-header">
+            <span class="match-group">${escaparHtml(p.fase || 'Fase de grupos')}${p.grupo ? ` · Grupo ${escaparHtml(p.grupo)}` : ''}</span>
+            <span class="match-datetime">📅 ${escaparHtml(p.fecha || 'Por definir')} · ${escaparHtml(p.hora || '--:--')}</span>
+          </div>
+          <div class="match-card-body">
+            <div class="match-team">
+              <span class="team-flag">${escaparHtml(p.bandera1 || '🏳️')}</span>
+              <span class="team-name">${escaparHtml(p.pais1 || 'Equipo 1')}</span>
+            </div>
+            <div class="match-vs">
+              <span class="vs-text">Resultado</span>
+              <span class="match-result">${resultado.goles1} - ${resultado.goles2}</span>
+            </div>
+            <div class="match-team">
+              <span class="team-flag">${escaparHtml(p.bandera2 || '🏳️')}</span>
+              <span class="team-name">${escaparHtml(p.pais2 || 'Equipo 2')}</span>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join('');
+  }
+
+  actualizarFiltroPartidosUI();
 }
 
 function abrirModalPrediccion(matchData) {
@@ -2591,6 +2676,16 @@ function registrarEventListenersUI() {
   const btnTabs = document.querySelectorAll('.nav-tab[data-tab]');
   btnTabs.forEach((tab) => {
     tab.addEventListener('click', () => cambiarTab(tab.dataset.tab));
+  });
+
+  const btnFiltrosPartidos = document.querySelectorAll('.filter-btn[data-filter]');
+  btnFiltrosPartidos.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filtro = btn.getAttribute('data-filter');
+      if (filtro !== 'proximos' && filtro !== 'jugados') return;
+      filtroPartidosActivo = filtro;
+      actualizarFiltroPartidosUI();
+    });
   });
 
   const rankingSelect = document.getElementById('ranking-select');
