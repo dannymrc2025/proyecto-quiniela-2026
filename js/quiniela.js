@@ -1590,6 +1590,15 @@ function mostrarApp() {
   const appContent = document.getElementById('app-content');
   if (appContent) appContent.style.display = 'block';
 
+  const btnLogout = document.getElementById('btn-logout');
+  if (btnLogout) {
+    // Bind directly each time app is shown so logout always works.
+    btnLogout.onclick = (e) => {
+      if (e) e.preventDefault();
+      cerrarSesion();
+    };
+  }
+
   if (currentUser) {
     const headerUserName = document.getElementById('header-username');
     const headerUserGroup = document.getElementById('header-usergroup');
@@ -1674,8 +1683,19 @@ function seleccionarPartidoEIniciarEnVivo() {
 
 function cerrarSesion() {
   localStorage.removeItem('usuarioId');
+  localStorage.removeItem('quinielaSesion');
   currentUser = null;
   sessionStorage.removeItem('acceso_docente');
+
+  const appShell = document.getElementById('app-shell');
+  if (appShell) {
+    appShell.classList.remove('visible');
+    appShell.style.display = 'none';
+  }
+
+  const appContent = document.getElementById('app-content');
+  if (appContent) appContent.style.display = 'none';
+
   mostrarLoginModal();
 }
 
