@@ -18,6 +18,7 @@ let currentUser = null;
 let listenersRegistrados = false;
 let modoAccesoLogin = 'menu';
 let filtroPartidosActivo = 'proximos';
+let prediccionesUsuarioActual = {};
 const CLAVE_DOCENTE = '2707';
 const HUSO_CANCUN = '-05:00';
 const MINUTOS_CIERRE_PREDICCION = 15;
@@ -2184,7 +2185,7 @@ function hacerPrediccion(usuarioId, partidoId, goles1, goles2) {
 
     const resultado_previsto = goles1 > goles2 ? 'gana_equipo1' : goles1 < goles2 ? 'gana_equipo2' : 'empate';
 
-    db.ref(`predicciones/${usuarioId}/${partidoId}`).set({
+    const payloadPrediccion = {
       goles1,
       goles2,
       resultado_previsto,
@@ -2192,10 +2193,30 @@ function hacerPrediccion(usuarioId, partidoId, goles1, goles2) {
       timestamp: Date.now(),
       timezone_referencia: 'America/Cancun',
       cierre_minutos_antes: MINUTOS_CIERRE_PREDICCION
-    });
+    };
 
-    mostrarNotificacion('success', '✅ Predicción guardada');
-    cerrarModal('modal-prediccion');
+    db.ref(`predicciones/${usuarioId}/${partidoId}`).set(payloadPrediccion, (error) => {
+      if (error) {
+        mostrarNotificacion('error', '❌ No se pudo guardar la predicción');
+        return;
+      }
+
+      prediccionesUsuarioActual[partidoId] = payloadPrediccion;
+      mostrarNotificacion('success', '✅ Predicción guardada');
+
+      if (typeof window.closePredictionModal === 'function') {
+        window.closePredictionModal();
+      } else {
+        cerrarModal('modal-prediction');
+      }
+
+      filtroPartidosActivo = 'proximos';
+      cambiarTab('partidos');
+      cargarPartidos();
+      if (typeof window.scrollTo === 'function') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
   });
 }
 
@@ -2505,14 +2526,32 @@ function actualizarVisibilidadModuloDocente() {
 }
 
 function cargarPartidos() {
-  db.ref('partidos').once('value', (snapshot) => {
-    const partidos = [];
-    snapshot.forEach((child) => {
-      partidos.push({ id: child.key, ...child.val() });
+  const promPartidos = db.ref('partidos').once('value');
+  const promPredicciones = currentUser
+    ? db.ref(`predicciones/${currentUser.id}`).once('value')
+    : Promise.resolve(null);
+
+  Promise.all([promPartidos, promPredicciones])
+    .then(([snapshot, predSnap]) => {
+      const partidos = [];
+      snapshot.forEach((child) => {
+        partidos.push({ id: child.key, ...child.val() });
+      });
+
+      const mapaPredicciones = {};
+      if (predSnap && predSnap.exists()) {
+        predSnap.forEach((child) => {
+          mapaPredicciones[child.key] = child.val() || {};
+        });
+      }
+
+      prediccionesUsuarioActual = mapaPredicciones;
+      mostrarPartidosEnUI(partidos, mapaPredicciones);
+      actualizarVisibilidadModuloDocente();
+    })
+    .catch(() => {
+      mostrarNotificacion('error', '❌ No se pudieron cargar los partidos');
     });
-    mostrarPartidosEnUI(partidos);
-    actualizarVisibilidadModuloDocente();
-  });
 }
 
 function actualizarFiltroPartidosUI() {
@@ -2531,7 +2570,7 @@ function actualizarFiltroPartidosUI() {
   });
 }
 
-function mostrarPartidosEnUI(partidos) {
+function mostrarPartidosEnUI(partidos, prediccionesUsuario = {}) {
   const contenedorProximos = document.getElementById('matches-proximos');
   const contenedorJugados = document.getElementById('matches-jugados');
   if (!contenedorProximos || !contenedorJugados) return;
@@ -2572,7 +2611,19 @@ function mostrarPartidosEnUI(partidos) {
   if (!proximos.length) {
     contenedorProximos.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>No hay partidos próximos</p></div>';
   } else {
-    contenedorProximos.innerHTML = proximos.map((p) => `
+    contenedorProximos.innerHTML = proximos.map((p) => {
+      const pred = prediccionesUsuario[p.id] || null;
+      const predG1 = Number.parseInt(pred ? pred.goles1 : null, 10);
+      const predG2 = Number.parseInt(pred ? pred.goles2 : null, 10);
+      const tienePred = Number.isFinite(predG1) && Number.isFinite(predG2);
+      const textoPred = tienePred
+        ? `Mi predicción: <strong>${predG1} - ${predG2}</strong>`
+        : 'Sin predicción aún';
+      const clasePred = tienePred ? 'my-prediction' : 'my-prediction no-pred';
+      const textoBoton = tienePred ? '✏️ Editar' : '✏️ Hacer predicción';
+      const claseBoton = tienePred ? 'btn-predict btn-edit' : 'btn-predict';
+
+      return `
       <article class="match-card" data-match-id="${p.id}">
         <div class="match-card-header">
           <span class="match-group">${p.fase || 'Fase de grupos'}${p.grupo ? ` · Grupo ${p.grupo}` : ''}</span>
@@ -2593,12 +2644,13 @@ function mostrarPartidosEnUI(partidos) {
           </div>
         </div>
         <div class="match-card-footer">
-          <span class="my-prediction no-pred">Sin predicción aún</span>
-          <button class="btn-predict" onclick="abrirModalPrediccion({id:'${escaparJsString(p.id)}', flagA:'${escaparJsString(p.bandera1 || '🏳️')}', teamA:'${escaparJsString(p.pais1 || 'Equipo 1')}', flagB:'${escaparJsString(p.bandera2 || '🏳️')}', teamB:'${escaparJsString(p.pais2 || 'Equipo 2')}', closeText:'${escaparJsString(obtenerTextoCierrePrediccion(p))}', isClosed:${estaCerradaPrediccion(p)}})">✏️ Hacer predicción</button>
+          <span class="${clasePred}">${textoPred}</span>
+          <button class="${claseBoton}" onclick="abrirModalPrediccion({id:'${escaparJsString(p.id)}', flagA:'${escaparJsString(p.bandera1 || '🏳️')}', teamA:'${escaparJsString(p.pais1 || 'Equipo 1')}', flagB:'${escaparJsString(p.bandera2 || '🏳️')}', teamB:'${escaparJsString(p.pais2 || 'Equipo 2')}', closeText:'${escaparJsString(obtenerTextoCierrePrediccion(p))}', isClosed:${estaCerradaPrediccion(p)}, predA:${tienePred ? predG1 : 0}, predB:${tienePred ? predG2 : 0}})">${textoBoton}</button>
         </div>
         <div style="font-size:0.8rem;color:#666;margin-top:6px;padding:0 4px;">⏰ ${escaparHtml(obtenerTextoCierrePrediccion(p))}</div>
       </article>
-    `).join('');
+    `;
+    }).join('');
   }
 
   if (!partidosJugados.length) {
@@ -2606,6 +2658,13 @@ function mostrarPartidosEnUI(partidos) {
   } else {
     contenedorJugados.innerHTML = partidosJugados.map((p) => {
       const resultado = obtenerResultadoPartido(p);
+      const pred = prediccionesUsuario[p.id] || null;
+      const predG1 = Number.parseInt(pred ? pred.goles1 : null, 10);
+      const predG2 = Number.parseInt(pred ? pred.goles2 : null, 10);
+      const tienePred = Number.isFinite(predG1) && Number.isFinite(predG2);
+      const predTexto = tienePred
+        ? `<div class="my-prediction" style="margin-top:8px;">Mi predicción: <strong>${predG1} - ${predG2}</strong></div>`
+        : '<div class="my-prediction no-pred" style="margin-top:8px;">No registraste predicción para este partido.</div>';
       return `
         <article class="match-card jugado" data-match-id="${p.id}">
           <div class="match-card-header">
@@ -2619,13 +2678,14 @@ function mostrarPartidosEnUI(partidos) {
             </div>
             <div class="match-vs">
               <span class="vs-text">Resultado</span>
-              <span class="match-result">${resultado.goles1} - ${resultado.goles2}</span>
+              <span class="match-result">${resultado.goles1 ?? '-'} - ${resultado.goles2 ?? '-'}</span>
             </div>
             <div class="match-team">
               <span class="team-flag">${escaparHtml(p.bandera2 || '🏳️')}</span>
               <span class="team-name">${escaparHtml(p.pais2 || 'Equipo 2')}</span>
             </div>
           </div>
+          <div class="match-card-footer">${predTexto}</div>
         </article>
       `;
     }).join('');
