@@ -1573,6 +1573,15 @@ function guardarResultadoModuloMaestro(finalizar = false) {
       updates.estado = 'finalizado';
     }
 
+    const regresarAFixtureConMarcador = () => {
+      filtroPartidosActivo = 'jugados';
+      cambiarTab('partidos');
+      cargarPartidos();
+      if (typeof window.scrollTo === 'function') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+
     const procesarDespuesDeGuardar = () => {
 
       if (!finalizar) {
@@ -1580,6 +1589,7 @@ function guardarResultadoModuloMaestro(finalizar = false) {
         mostrarNotificacion('success', '✅ Marcador guardado (aún no finalizado)');
         cargarPartidosModuloMaestro();
         cargarDetallePartidoModuloMaestro(true);
+        regresarAFixtureConMarcador();
         return;
       }
 
@@ -1602,6 +1612,7 @@ function guardarResultadoModuloMaestro(finalizar = false) {
         mostrarNotificacion('warning', '⚠️ Puntos ya calculados anteriormente para este partido');
         cargarPartidosModuloMaestro();
         cargarDetallePartidoModuloMaestro(true);
+        regresarAFixtureConMarcador();
         return;
       }
 
@@ -1639,6 +1650,7 @@ function guardarResultadoModuloMaestro(finalizar = false) {
       mostrarNotificacion('success', '✅ Partido finalizado y puntos calculados');
       cargarPartidosModuloMaestro();
       cargarDetallePartidoModuloMaestro(true);
+      regresarAFixtureConMarcador();
     };
 
     actualizarNodoConFallback(`partidos/${partidoId}`, updates)
