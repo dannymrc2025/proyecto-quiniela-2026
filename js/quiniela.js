@@ -16,6 +16,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 let currentUser = null;
 let listenersRegistrados = false;
+let modoAccesoLogin = 'menu';
 const CLAVE_DOCENTE = '2707';
 const HUSO_CANCUN = '-05:00';
 const MINUTOS_CIERRE_PREDICCION = 15;
@@ -34,11 +35,20 @@ function normalizarCodigoInvitacion(codigo) {
   return (codigo || '').toString().toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5);
 }
 
+function normalizarTextoRol(valor) {
+  return String(valor || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
 function esCodigoValido(codigo) {
   return /^[A-Z0-9]{5}$/.test(codigo || '');
 }
 
 function tieneAccesoDocente() {
+  if (esUsuarioAdmin()) return true;
   return sessionStorage.getItem('acceso_docente') === '1';
 }
 
@@ -48,17 +58,34 @@ function desbloquearModuloDocente() {
     return;
   }
 
-  const clave = window.prompt('Ingresa la contraseña del módulo docente');
-  if (clave === null) return;
+  sessionStorage.setItem('acceso_docente', '1');
+  mostrarNotificacion('success', '✅ Módulo docente habilitado automáticamente');
+  mostrarPerfil();
+}
 
-  if (clave.trim() === CLAVE_DOCENTE) {
-    sessionStorage.setItem('acceso_docente', '1');
-    mostrarNotificacion('success', '✅ Módulo docente desbloqueado');
-    mostrarPerfil();
+function abrirModuloMaestroDesdePrincipal() {
+  if (!esUsuarioAdmin()) {
+    mostrarNotificacion('error', '❌ Solo admin/docente puede acceder al módulo maestro');
     return;
   }
 
-  mostrarNotificacion('error', '❌ Contraseña docente incorrecta');
+  const clave = window.prompt('Ingresa el código de acceso del módulo maestro');
+  if (clave === null) return;
+
+  if (clave.trim() !== CLAVE_DOCENTE) {
+    mostrarNotificacion('error', '❌ Código incorrecto');
+    return;
+  }
+
+  sessionStorage.setItem('acceso_docente', '1');
+  mostrarNotificacion('success', '✅ Acceso concedido al módulo maestro');
+  cambiarTab('perfil');
+  mostrarPerfil();
+
+  const panelMaestro = document.getElementById('admin-master-panel');
+  if (panelMaestro) {
+    panelMaestro.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 function formatearGrupoUsuario(grupo) {
@@ -792,13 +819,158 @@ function mostrarLoginModal() {
 
   const loginError = document.getElementById('modal-login-error');
   if (loginError) loginError.textContent = '';
-  document.getElementById('modal-login').style.display = 'flex';
+  const modal = document.getElementById('modal-login');
+  if (modal) modal.style.display = 'flex';
+  actualizarVistaAccesoLogin('menu');
+}
+
+function esPerfilAdmin(usuario) {
+  if (!usuario) return false;
+  const rol = normalizarTextoRol(usuario.rol);
+
+  if (rol === 'profesor' || rol === 'profesora' || rol === 'docente' || rol === 'admin' || rol === 'administrador' || rol === 'organizador' || rol === 'maestro' || rol === 'teacher') {
+    return true;
+  }
+
+  if (usuario.admin === true || usuario.es_admin === true || usuario.profesor === true || usuario.docente === true) {
+    return true;
+  }
+
+  return false;
 }
 
 function esUsuarioAdmin() {
-  if (!currentUser) return false;
-  const rol = (currentUser.rol || '').toLowerCase();
-  return rol === 'profesor' || rol === 'admin' || rol === 'organizador';
+  return esPerfilAdmin(currentUser);
+}
+
+function actualizarVistaAccesoLogin(modo) {
+  modoAccesoLogin = modo;
+
+  const modal = document.getElementById('modal-login');
+  const title = document.getElementById('modal-login-title');
+  const subtitle = document.getElementById('modal-login-subtitle');
+  const presentacion = document.getElementById('modal-login-presentacion');
+  const panelAlumno = document.getElementById('modal-panel-alumno');
+  const panelProfesor = document.getElementById('modal-panel-profesor');
+  const fieldNombre = document.getElementById('modal-field-alumno-nombre');
+  const fieldGrupo = document.getElementById('modal-field-alumno-grupo');
+  const fieldSexo = document.getElementById('modal-field-alumno-sexo');
+  const btnAlumno = document.getElementById('btn-modal-registrarme');
+  const loginError = document.getElementById('modal-login-error');
+
+  if (modal) modal.dataset.mode = modo;
+  if (loginError) loginError.textContent = '';
+
+  if (presentacion) presentacion.style.display = modo === 'menu' ? 'grid' : 'none';
+  if (panelAlumno) panelAlumno.classList.toggle('active', modo === 'alumno_login' || modo === 'alumno_registro');
+  if (panelProfesor) panelProfesor.classList.toggle('active', modo === 'profesor');
+
+  if (modo === 'menu') {
+    if (presentacion) {
+      presentacion.classList.remove('animate');
+      void presentacion.offsetWidth;
+      presentacion.classList.add('animate');
+    }
+    if (title) title.textContent = 'Bienvenido';
+    if (subtitle) subtitle.textContent = 'Selecciona cómo quieres entrar.';
+    return;
+  }
+
+  if (presentacion) {
+    presentacion.classList.remove('animate');
+  }
+
+  if (modo === 'alumno_login') {
+    if (title) title.textContent = 'Ingresar como alumno';
+    if (subtitle) subtitle.textContent = 'Ingresa únicamente tu código de invitación de 5 caracteres.';
+    if (fieldNombre) fieldNombre.style.display = 'none';
+    if (fieldGrupo) fieldGrupo.style.display = 'none';
+    if (fieldSexo) fieldSexo.style.display = 'none';
+    if (btnAlumno) btnAlumno.textContent = 'INGRESAR COMO ALUMNO';
+    const codeInput = document.getElementById('modal-login-code');
+    if (codeInput) codeInput.focus();
+    return;
+  }
+
+  if (modo === 'alumno_registro') {
+    if (title) title.textContent = 'Registro de alumno';
+    if (subtitle) subtitle.textContent = 'Completa tus datos para registrarte por primera vez.';
+    if (fieldNombre) fieldNombre.style.display = 'flex';
+    if (fieldGrupo) fieldGrupo.style.display = 'flex';
+    if (fieldSexo) fieldSexo.style.display = 'flex';
+    if (btnAlumno) btnAlumno.textContent = 'REGISTRARME COMO ALUMNO';
+    const codeInput = document.getElementById('modal-login-code');
+    if (codeInput) codeInput.focus();
+    return;
+  }
+
+  if (modo === 'profesor') {
+    if (title) title.textContent = 'Ingreso de profesor (admin)';
+    if (subtitle) subtitle.textContent = 'Ingresa tu código de invitación y la clave docente.';
+    const profCode = document.getElementById('modal-prof-code');
+    const profPass = document.getElementById('modal-prof-pass');
+    if (profCode) profCode.focus();
+    if (profPass) profPass.value = '';
+  }
+}
+
+function ingresarComoProfesorDesdeModal() {
+  const loginError = document.getElementById('modal-login-error');
+  const codigo = normalizarCodigoInvitacion(document.getElementById('modal-prof-code')?.value || '');
+  const clave = (document.getElementById('modal-prof-pass')?.value || '').trim();
+
+  if (clave !== CLAVE_DOCENTE) {
+    if (loginError) loginError.textContent = 'Clave docente incorrecta.';
+    mostrarNotificacion('error', '❌ Clave docente incorrecta');
+    return;
+  }
+
+  if (!esCodigoValido(codigo)) {
+    if (loginError) loginError.textContent = 'El código debe tener 5 caracteres en mayúscula.';
+    mostrarNotificacion('error', '❌ Código inválido');
+    return;
+  }
+
+  db.ref(`codigos_invitacion/${codigo}`).once('value', (snap) => {
+    if (!snap.exists()) {
+      if (loginError) loginError.textContent = 'Código inválido. Verifica e intenta de nuevo.';
+      mostrarNotificacion('error', '❌ Código inválido');
+      return;
+    }
+
+    const codigoData = snap.val() || {};
+    if (codigoData.usado !== true || !codigoData.usuario_id) {
+      if (loginError) loginError.textContent = 'Este código no tiene un profesor/admin asociado.';
+      mostrarNotificacion('error', '❌ Código sin cuenta de profesor');
+      return;
+    }
+
+    db.ref(`usuarios/${codigoData.usuario_id}`).once('value', (userSnap) => {
+      if (!userSnap.exists()) {
+        if (loginError) loginError.textContent = 'No se encontró el usuario asociado al código.';
+        mostrarNotificacion('error', '❌ Usuario no encontrado');
+        return;
+      }
+
+      const usuario = userSnap.val() || {};
+      if (!esPerfilAdmin(usuario)) {
+        if (loginError) loginError.textContent = 'La cuenta no tiene permisos de profesor/admin.';
+        mostrarNotificacion('error', '❌ Cuenta sin permisos de profesor/admin');
+        return;
+      }
+
+      localStorage.setItem('usuarioId', usuario.id);
+      currentUser = usuario;
+      sessionStorage.setItem('acceso_docente', '1');
+      registrarEventoSesion(usuario.id, 'codigo_profesor', codigo, { acceso_docente: true });
+      if (loginError) loginError.textContent = '';
+
+      const modal = document.getElementById('modal-login');
+      if (modal) modal.style.display = 'none';
+      mostrarNotificacion('success', `✅ Bienvenido profesor: ${usuario.nombre || 'Admin'}`);
+      mostrarApp();
+    });
+  });
 }
 
 function escaparHtml(value) {
@@ -1694,6 +1866,15 @@ function mostrarApp() {
   }
 
   if (currentUser) {
+    if (esUsuarioAdmin()) {
+      sessionStorage.setItem('acceso_docente', '1');
+    }
+
+    const btnMasterQuick = document.getElementById('btn-master-quick-access');
+    if (btnMasterQuick) {
+      btnMasterQuick.style.display = esUsuarioAdmin() ? 'inline-flex' : 'none';
+    }
+
     const headerUserName = document.getElementById('header-username');
     const headerUserGroup = document.getElementById('header-usergroup');
     const profileName = document.getElementById('profile-name');
@@ -2280,11 +2461,11 @@ function mostrarPartidosEnUI(partidos) {
     if (!puedeVer) return;
 
     if (status) {
-      status.textContent = desbloqueado ? 'Módulo desbloqueado' : 'Módulo bloqueado con contraseña';
+      status.textContent = desbloqueado ? 'Módulo docente activo' : 'Módulo bloqueado con contraseña';
     }
 
     if (btn) {
-      btn.textContent = desbloqueado ? 'Módulo desbloqueado' : 'Desbloquear módulo docente';
+      btn.textContent = desbloqueado ? 'Módulo docente activo' : 'Desbloquear módulo docente';
       btn.disabled = desbloqueado;
     }
   }
@@ -2400,13 +2581,58 @@ function registrarEventListenersUI() {
       const nombre = document.getElementById('modal-login-name')?.value?.trim() || '';
       const grupo = document.getElementById('modal-login-group')?.value || '';
       const sexoRaw = document.getElementById('modal-login-sex')?.value || '';
-      procesarEntradaLoginRegistro(codigo, nombre, grupo, sexoRaw);
+      const modo = document.getElementById('modal-login')?.dataset.mode || modoAccesoLogin;
+
+      if (modo === 'alumno_login') {
+        iniciarSesionSoloConCodigo(codigo);
+        return;
+      }
+
+      if (modo === 'alumno_registro') {
+        procesarEntradaLoginRegistro(codigo, nombre, grupo, sexoRaw);
+        return;
+      }
+
+      const loginError = document.getElementById('modal-login-error');
+      if (loginError) loginError.textContent = 'Selecciona primero una opción de acceso.';
+      mostrarNotificacion('warning', '⚠️ Selecciona cómo deseas entrar');
     });
+  }
+
+  const btnPresentAlumnoLogin = document.getElementById('btn-presentacion-alumno-login');
+  if (btnPresentAlumnoLogin) {
+    btnPresentAlumnoLogin.addEventListener('click', () => actualizarVistaAccesoLogin('alumno_login'));
+  }
+
+  const btnPresentAlumnoRegistro = document.getElementById('btn-presentacion-alumno-registro');
+  if (btnPresentAlumnoRegistro) {
+    btnPresentAlumnoRegistro.addEventListener('click', () => actualizarVistaAccesoLogin('alumno_registro'));
+  }
+
+  const btnPresentProfesor = document.getElementById('btn-presentacion-profesor');
+  if (btnPresentProfesor) {
+    btnPresentProfesor.addEventListener('click', () => actualizarVistaAccesoLogin('profesor'));
+  }
+
+  const btnBackAlumno = document.getElementById('btn-login-back-menu');
+  if (btnBackAlumno) {
+    btnBackAlumno.addEventListener('click', () => actualizarVistaAccesoLogin('menu'));
+  }
+
+  const btnBackProfesor = document.getElementById('btn-prof-back-menu');
+  if (btnBackProfesor) {
+    btnBackProfesor.addEventListener('click', () => actualizarVistaAccesoLogin('menu'));
+  }
+
+  const btnModalProfesor = document.getElementById('btn-modal-profesor');
+  if (btnModalProfesor) {
+    btnModalProfesor.addEventListener('click', ingresarComoProfesorDesdeModal);
   }
 
   const codeInputs = [
     document.getElementById('modal-login-code'),
-    document.getElementById('login-code')
+    document.getElementById('login-code'),
+    document.getElementById('modal-prof-code')
   ].filter(Boolean);
 
   codeInputs.forEach((input) => {
@@ -2419,6 +2645,11 @@ function registrarEventListenersUI() {
   const btnDocenteUnlock = document.getElementById('btn-docente-unlock');
   if (btnDocenteUnlock) {
     btnDocenteUnlock.addEventListener('click', desbloquearModuloDocente);
+  }
+
+  const btnMasterQuick = document.getElementById('btn-master-quick-access');
+  if (btnMasterQuick) {
+    btnMasterQuick.addEventListener('click', abrirModuloMaestroDesdePrincipal);
   }
 
   const btnLogout = document.getElementById('btn-logout');
