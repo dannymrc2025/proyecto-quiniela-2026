@@ -2848,6 +2848,21 @@ function abrirModalPrediccion(matchData) {
 }
 
 function cerrarModalPrediccionRobusto() {
+  const ocultar = () => {
+    const modal = document.getElementById('modal-prediction');
+    if (modal) {
+      modal.classList.remove('open');
+      modal.style.display = 'none';
+      modal.removeAttribute('data-match-id');
+    }
+
+    const modalLegacy = document.getElementById('modal-prediccion');
+    if (modalLegacy) {
+      modalLegacy.classList.remove('open');
+      modalLegacy.style.display = 'none';
+    }
+  };
+
   try {
     if (typeof window.closePredictionModal === 'function') {
       window.closePredictionModal();
@@ -2858,17 +2873,8 @@ function cerrarModalPrediccionRobusto() {
     cerrarModal('modal-prediction');
   } catch (_) {}
 
-  const modal = document.getElementById('modal-prediction');
-  if (modal) {
-    modal.classList.remove('open');
-    modal.style.display = 'none';
-  }
-
-  const modalLegacy = document.getElementById('modal-prediccion');
-  if (modalLegacy) {
-    modalLegacy.classList.remove('open');
-    modalLegacy.style.display = 'none';
-  }
+  ocultar();
+  setTimeout(ocultar, 50);
 }
 
 function guardarPrediccion() {
