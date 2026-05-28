@@ -22,6 +22,7 @@ let prediccionesUsuarioActual = {};
 const CLAVE_DOCENTE = '2707';
 const HUSO_CANCUN = '-05:00';
 const MINUTOS_CIERRE_PREDICCION = 15;
+const DESACTIVAR_CIERRE_PREDICCIONES = true; // Solo para pruebas manuales
 const MAPA_DIECISEISAVOS_BASE = {
   m049: { slot1: '1A', slot2: '2B' },
   m050: { slot1: '1C', slot2: '2D' },
@@ -137,12 +138,17 @@ function obtenerCierrePrediccionMs(partido) {
 }
 
 function estaCerradaPrediccion(partido) {
+  if (DESACTIVAR_CIERRE_PREDICCIONES) return false;
   const cierre = obtenerCierrePrediccionMs(partido);
   if (!cierre) return false;
   return Date.now() >= cierre;
 }
 
 function obtenerTextoCierrePrediccion(partido) {
+  if (DESACTIVAR_CIERRE_PREDICCIONES) {
+    return 'Prueba activa: cierre de predicción desactivado';
+  }
+
   const cierre = obtenerCierrePrediccionMs(partido);
   if (!cierre) return 'Cierre no disponible';
   const fechaHora = new Date(cierre).toLocaleString('es-MX', {
