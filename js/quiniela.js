@@ -1986,6 +1986,15 @@ function mostrarNotificacion(tipo, mensaje, duracion = 5000) {
   toast.className = `toast toast-${tipo}`;
   toast.innerHTML = mensaje;
 
+  const mensajePlano = String(mensaje || '').replace(/<[^>]*>/g, '').toLowerCase();
+  if (tipo === 'success' && mensajePlano.includes('predicción guardada')) {
+    setTimeout(() => {
+      if (typeof cerrarModalPrediccionRobusto === 'function') {
+        cerrarModalPrediccionRobusto();
+      }
+    }, 10);
+  }
+
   const colores = {
     success: '#3CAC3B',
     error: '#E61D25',
