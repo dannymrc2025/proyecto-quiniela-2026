@@ -3022,11 +3022,15 @@
           btnPredSave.title = matchData.isClosed ? 'Predicción cerrada (15 minutos antes)' : '';
         }
       }
+      modalPred.style.display = 'flex';
       modalPred.classList.add('open');
     }
 
     function closePredictionModal() {
-      if (modalPred) modalPred.classList.remove('open');
+      if (modalPred) {
+        modalPred.classList.remove('open');
+        modalPred.style.display = 'none';
+      }
       if (btnPredSave) {
         btnPredSave.disabled = false;
         btnPredSave.style.opacity = '1';
